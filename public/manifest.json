@@ -1,0 +1,29 @@
+{
+    "name": "Lobby - New Tab",
+    "description": "A minimal newtab lobby for your browser. Inspired by Momentum",
+    "version": "0.1",
+    "manifest_version": 3,
+    "icons": {
+        "16": "/icons/get_started16.png",
+        "32": "/icons/get_started32.png",
+        "48": "/icons/get_started48.png",
+        "128": "/icons/get_started128.png"
+    },
+    "background": {
+        "service_worker": "src/background/index.js"
+    },
+    "action": {
+        "default_icon": {
+            "16": "/icons/get_started16.png",
+            "32": "/icons/get_started32.png",
+            "48": "/icons/get_started48.png",
+            "128": "/icons/get_started128.png"
+        }
+    },
+    "chrome_url_overrides": {
+        "newtab": "src/app/index.html"
+    },
+    "permissions": [
+        "storage"
+    ]
+}
