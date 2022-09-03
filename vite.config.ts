@@ -11,6 +11,7 @@ export default defineConfig({
         alias: {
             src: srcDir,
             '@features': resolve(srcDir, 'app', 'features'),
+            '@lib': resolve(srcDir, 'app', 'lib'),
         },
     },
     build: {

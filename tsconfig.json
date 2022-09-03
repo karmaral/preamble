@@ -16,7 +16,8 @@
         "checkJs": true,
         "isolatedModules": true,
         "paths": {
-          "@features/*": ["src/app/features/*"]
+          "@features/*": ["src/app/features/*"],
+          "@lib/*": ["src/app/lib/*"]
         },
     },
     "include": [
