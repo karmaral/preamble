@@ -54,7 +54,7 @@ function onMessage(request, sender, sendResponse) {
   switch (request.action) {
     case 'bg:new':
       const img = fetchRandomImage();
-      sendResponse({ response; img });
+      sendResponse({ response: img });
       break;
     default: break;
   }
