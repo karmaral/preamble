@@ -31,7 +31,7 @@
         "vite": "^2.9.13"
     },
     "dependencies": {
-        "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
         "unsplash-js": "^7.0.15"
     }
 }
