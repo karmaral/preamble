@@ -4,23 +4,29 @@
   import Background from '@features/background';
 
 
-function printDate(){
-  const now = new Date();
-  const hours = now.getHours();
-  const mins = now.getMinutes();
-  const hh = String(hours).padStart(2, '0');
-  const mm = String(mins).padStart(2, '0');
+  let now = new Date();
 
-  return `${hh}:${mm}`;
-}
+  function tickDate() {
+    now = new Date();
+    setTimeout(tickDate, 1000);
+  }
+  function printDate(date){
+    const hours = date.getHours();
+    const mins = date.getMinutes();
+    const hh = String(hours).padStart(2, '0');
+    const mm = String(mins).padStart(2, '0');
 
+    return `${hh}:${mm}`;
+  }
+
+  tickDate();
 </script>
 
 <main>
   <Background />
   <div class='layout'>
     <div class='layout-content'>
-      <div class='time'><span>{printDate()}</span></div>
+      <div class='time'><span>{printDate(now)}</span></div>
       <div class='greeting'><span>Hello, Amaral</span></div>
 
       <button on:click={requestNewBackground}>New background</button>
