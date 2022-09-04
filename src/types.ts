@@ -19,4 +19,10 @@ export type BackgroundPhoto = {
   src: string,
   url: string,
   user_name: string,
+  alt_description: string,
+};
+
+export type StoredSettings = {
+  current_bg: BackgroundPhoto,
+  last_changed: string,
 };
