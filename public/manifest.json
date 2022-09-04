@@ -1,6 +1,6 @@
 {
-    "name": "Lobby - New Tab",
-    "description": "A minimal newtab lobby for your browser. Inspired by Momentum",
+    "name": "Preamble - New Tab",
+    "description": "A minimal browsing preamble. Inspired by Momentum",
     "version": "0.1",
     "manifest_version": 3,
     "icons": {
