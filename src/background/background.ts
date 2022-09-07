@@ -22,10 +22,11 @@ async function fetchRandomImage(): Promise<Random> {
   return result;
 }
 
-async function newBackground(): Promise<void> {
+async function newBackground(): Promise<BackgroundPhoto> {
   const imgFetch = await fetchRandomImage();
 
   const photo: BackgroundPhoto = {
+    id: imgFetch.id,
     src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
     url: imgFetch.links.html,
     user_name: imgFetch.user.name,
@@ -42,6 +43,8 @@ async function newBackground(): Promise<void> {
   await chrome.storage.local.set(storedSettings);
 
   sendUpdatedBackground(photo);
+
+  return photo;
 }
 
 

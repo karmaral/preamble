@@ -16,6 +16,7 @@ export type UnsplashPhoto = {
 };
 
 export type BackgroundPhoto = {
+  id: string,
   src: string,
   url: string,
   user_name: string,
