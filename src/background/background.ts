@@ -4,8 +4,8 @@ import type { Random } from "unsplash-js/dist/methods/photos/types";
 import type { BackgroundPhoto, StoredSettings } from "src/types";
 
 const collections = [
-  '2156994', // Nature Backgrounds (Momentum) - Nicholas Prozorovsky
-  '327760', // Nature - Alex Chaves
+  '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */
+  '327760', /* Nature - Alex Chaves */
 ];
 console.log('background');
 
@@ -15,7 +15,7 @@ const unsplash = createApi({ accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY
 async function fetchRandomImage(): Promise<Random> {
   console.log('bg >> calling unsplash API');
   const fetch = await unsplash.photos.getRandom({
-    collectionIds: ['2156994'],
+    collectionIds: collections,
   });
   const result = isArray(fetch.response) ? fetch.response[0] : fetch.response;
 
