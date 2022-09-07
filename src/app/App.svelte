@@ -2,31 +2,15 @@
   import './app.css';
   import { requestNewBackground } from '@lib/middleware';
   import Background from '@features/background';
+  import Clock from '@features/clock.svelte';
 
-
-  let now = new Date();
-
-  function tickDate() {
-    now = new Date();
-    setTimeout(tickDate, 1000);
-  }
-  function printDate(date){
-    const hours = date.getHours();
-    const mins = date.getMinutes();
-    const hh = String(hours).padStart(2, '0');
-    const mm = String(mins).padStart(2, '0');
-
-    return `${hh}:${mm}`;
-  }
-
-  tickDate();
 </script>
 
 <main>
   <Background />
   <div class='layout'>
     <div class='layout-content'>
-      <div class='time'><span>{printDate(now)}</span></div>
+      <Clock />
       <div class='greeting'><span>Hello, Amaral</span></div>
 
       <button on:click={requestNewBackground}>New background</button>
@@ -54,14 +38,9 @@
       radial-gradient(transparent 80%, rgb(0 0 0 / 51%) 125%);
     gap: 1em;
   }
-  .time {
-    font-size: 11rem;
-  }
   .greeting {
     font-size: 4rem;
-  }
-  .time,.greeting {
-    font-weight: 500;
+    font-weight: 300;
     line-height: 1;
   }
   button {
@@ -70,6 +49,8 @@
     padding: 1rem;
     background-color: rgb(0 0 0 / 25%);
     border-radius: 2em;
+    display: flex;
+    flex-direction: column;
   }
   button:hover {
     background-color: rgb(0 0 0 / 40%);
