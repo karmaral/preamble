@@ -1,6 +1,6 @@
 {
-    "name": "lobby-new-tab",
-    "version": "2.0.0",
+    "name": "preamble-new-tab",
+    "version": "0.1.0",
     "type": "module",
     "repository": {
         "type": "git",
