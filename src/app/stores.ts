@@ -4,16 +4,17 @@ import { writable } from 'svelte/store';
 
 export let bgData = writable<BackgroundPhoto>();
 
+export let photos = writable<BackgroundPhoto[]>([] as BackgroundPhoto[]);
 
 async function initStores() {
   const photo = await requestInit();
-  bgData.set(photo);
+  photos.set([photo]);
 }
 
 function onMessage(request) {
   switch (request.action) {
     case 'update:bg':
-      bgData.set(request.payload);
+      photos.update(($photos) => [...$photos, request.payload]);
       break;
     default: break;
   }

@@ -1,26 +1,40 @@
 <script lang="ts">
-  import type { BackgroundPhoto } from 'src/types';
-  import { bgData as photo } from 'src/app/stores';
+  import { photos } from 'src/app/stores';
 
+  const CROSSFADE_TIME = 2000;
+  const INITIAL_FADE_TIME = 600;
 
-  console.log('background.svelte');
+  async function handleTransition(event: Event) {
+    const image = event.target as HTMLImageElement;
+    if (!image) return;
 
+    const isSingle = $photos.length === 1;
+    const duration = isSingle ? INITIAL_FADE_TIME : CROSSFADE_TIME;
 
-  let loaded = false;
+    const animation = image.animate(
+      [{ opacity: 1 }],
+      { duration, fill: 'forwards' },
+    );
+
+    await animation.finished;
+
+    if (!isSingle) {
+      $photos = $photos.slice(1);
+    }
+  }
 
 </script>
 
-<div class="background" class:loaded >
-    <!-- <img class='previous'
-      on:load|once={() => loaded = true}
-      src={photo?.src}
-      alt={photo?.alt_description}
-    > -->
-    <img class='current'
-      on:load|once={() => loaded = true}
-      src={$photo?.src}
-      alt={$photo?.alt_description}
-    >
+<div class="background">
+  {#if $photos.length}
+    {#each $photos as photo (photo.id)}
+      <img
+        on:load={handleTransition}
+        src={photo.src}
+        alt={photo.alt_description}
+      >
+    {/each}
+  {/if}
 </div>
 
 <style>
@@ -32,7 +46,6 @@
   }
   img {
     opacity: 0;
-    transition: opacity .8s;
+    position: absolute;
   }
-  .loaded img { opacity: 1; }
 </style>
