@@ -5,6 +5,7 @@ import { writable } from 'svelte/store';
 export let bgData = writable<BackgroundPhoto>();
 
 export let photos = writable<BackgroundPhoto[]>([] as BackgroundPhoto[]);
+export let isBackgroundChanging = writable<boolean>(false);
 
 async function initStores() {
   const photo = await requestInit();

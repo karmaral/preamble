@@ -32,6 +32,8 @@ async function newBackground(): Promise<BackgroundPhoto> {
     url: imgFetch.links.html,
     user_name: imgFetch.user.name,
     alt_description: imgFetch.alt_description,
+    location_city: imgFetch.location.city,
+    location_country: imgFetch.location.country,
   };
 
   const last_changed = Date().toString();

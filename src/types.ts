@@ -21,6 +21,8 @@ export type BackgroundPhoto = {
   url: string,
   user_name: string,
   alt_description: string,
+  location_city: string,
+  location_country: string,
 };
 
 export type StoredSettings = {

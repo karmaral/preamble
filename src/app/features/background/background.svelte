@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { photos } from 'src/app/stores';
+  import { photos, isBackgroundChanging } from 'src/app/stores';
 
   const CROSSFADE_TIME = 2000;
   const INITIAL_FADE_TIME = 600;
@@ -20,6 +20,7 @@
 
     if (!isSingle) {
       $photos = $photos.slice(1);
+      $isBackgroundChanging = false;
     }
   }
 
