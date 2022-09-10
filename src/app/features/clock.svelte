@@ -18,12 +18,12 @@
   tickDate();
 </script>
 
-<div class='time'><span>{printDate(now)}</span></div>
+<div class="time"><span>{printDate(now)}</span></div>
 
 <style>
   .time {
     font-size: 11rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: -5px;
     line-height: 1;
   }
