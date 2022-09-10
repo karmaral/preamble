@@ -35,6 +35,7 @@
       >
     {/each}
   {/if}
+  <div class="bg-overlay"></div>
 </div>
 
 <style>
@@ -43,6 +44,16 @@
     inset: 0;
     background: white;
     z-index: 0;
+  }
+  .bg-overlay{
+    position: absolute;
+    inset: 0;
+    background-image: url('../bg-overlay.png');
+    background-size: cover;
+    background-position: center;
+    mix-blend-mode: multiply;
+    z-index: 2;
+    transition: opacity .5s;
   }
   img {
     opacity: 0;
