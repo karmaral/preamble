@@ -1,3 +1,4 @@
+import { settingKeys } from './utils';
 import { isArray } from 'lodash-es';
 import { createApi } from 'unsplash-js';
 import type { Random } from "unsplash-js/dist/methods/photos/types";
@@ -57,8 +58,11 @@ async function sendUpdatedBackground(photo: BackgroundPhoto) {
 
 async function init(): Promise<BackgroundPhoto> {
   let photo: BackgroundPhoto;
-  const { current_bg, last_changed } =
-    await chrome.storage.local.get(['current_bg', 'last_changed']) as StoredSettings;
+  const {
+    current_bg,
+    last_changed,
+    user_name,
+  } = await chrome.storage.local.get(settingKeys) as StoredSettings;
 
   if (!last_changed) {
     const date = new Date().toString();
@@ -69,7 +73,7 @@ async function init(): Promise<BackgroundPhoto> {
     photo = await newBackground();
   }
 
-  console.log({ current_bg, last_changed });
+  console.log({ current_bg, last_changed, user_name });
 
   return photo || current_bg;
 }
