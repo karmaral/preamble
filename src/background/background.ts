@@ -2,7 +2,11 @@ import { SETTINGS_KEYS } from './utils';
 import { isArray, isEmpty } from 'lodash-es';
 import { createApi } from 'unsplash-js';
 import type { Random } from "unsplash-js/dist/methods/photos/types";
-import type { BackgroundPhoto, StoredSettings } from "src/types";
+import type {
+  BackgroundPhoto,
+  StoredSettings,
+  StoredSettingVariable,
+} from "src/types";
 
 const collections = [
   '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */

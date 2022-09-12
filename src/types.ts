@@ -25,6 +25,11 @@ export type BackgroundPhoto = {
   img_color: string,
 };
 
+export type StoredSettingVariable = {
+  setting: string,
+  value: string,
+};
+
 export type StoredSettings = {
   current_bg?: BackgroundPhoto,
   last_changed?: string,
