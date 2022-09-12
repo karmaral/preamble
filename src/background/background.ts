@@ -4,6 +4,7 @@ import { createApi } from 'unsplash-js';
 import type { Random } from "unsplash-js/dist/methods/photos/types";
 import type {
   BackgroundPhoto,
+  Quote,
   StoredSettings,
   StoredSettingVariable,
 } from "src/types";
@@ -71,13 +72,73 @@ async function sendUpdatedBackground(photo: BackgroundPhoto) {
   });
 }
 
+async function fetchDailyQuote(): Promise<Quote> {
+  const { quote_source } = await chrome.storage.local.get('quote_source') as { quote_source: StoredSettingVariable };
+  const { value: url } = quote_source;
+
+  let data = await fetch(url);
+  // data = target === 'GitHub'
+  //   ? await data.text()
+  //   : await data.json();
+  data = await data.json();
+
+  console.log({
+    data,
+    contents: data.contents,
+    quotes: data.contents.quotes,
+  });
+  let result : Quote;
+
+  result = {
+    id: data.contents.quotes[0].id,
+    author: data.contents.quotes[0].author,
+    text: data.contents.quotes[0].quote,
+    source: data.contents.quotes[0].permalink,
+  };
+  console.log({ result });
+
+  return result;
+}
+
+async function newQuote(skipSend: boolean = false): Promise<Quote> {
+  const quote = await fetchDailyQuote();
+  const { quote_history } = await chrome.storage.local.get('quote_history');
+
+  // check if can get quote
+  // (day passed since last)
+  const newEntry = { q: quote, date: new Date().toString() };
+  const storedSettings: StoredSettings = {
+    current_quote: quote,
+    quote_history: [...quote_history, newEntry],
+  };
+
+  await chrome.storage.local.set(storedSettings);
+
+  if (!skipSend) {
+    sendUpdatedQuote(quote);
+  }
+
+  return quote;
+}
+
+async function sendUpdatedQuote(quote: Quote) {
+  chrome.runtime.sendMessage({
+    action: 'update:quote',
+    payload: quote,
+  });
+}
+
 async function init(): Promise<BackgroundPhoto> {
   let photo: BackgroundPhoto;
+  let quote : Quote;
   const {
     current_bg,
     last_changed,
     user_name,
     backdrop_color,
+    current_quote,
+    quote_history,
+    quote_source,
   } = await chrome.storage.local.get(SETTINGS_KEYS) as StoredSettings;
 
   if (isEmpty(last_changed)) {
@@ -97,9 +158,26 @@ async function init(): Promise<BackgroundPhoto> {
       },
     });
   }
+
+  if (isEmpty(quote_source)) {
+    await chrome.storage.local.set({
+      quote_source: {
+        setting: 'They Said So',
+        value: 'https://quotes.rest/qod',
+      },
+    });
+  }
+  if (isEmpty(quote_history)) {
+    await chrome.storage.local.set({
+      quote_history: [],
+    });
   }
 
-  console.log({ current_bg, last_changed, user_name });
+  quote = isEmpty(current_quote)
+    ? await newQuote(true)
+    : current_quote;
+
+  sendUpdatedQuote(quote);
 
   return photo;
 }

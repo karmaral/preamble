@@ -25,6 +25,12 @@ export type BackgroundPhoto = {
   img_color: string,
 };
 
+export type Quote = {
+  id: string,
+  text: string,
+  author: string,
+  source: string,
+};
 export type StoredSettingVariable = {
   setting: string,
   value: string,
@@ -35,4 +41,7 @@ export type StoredSettings = {
   last_changed?: string,
   user_name?: string,
   backdrop_color?: StoredSettingVariable,
+  current_quote?: Quote,
+  quote_history?: { date: string, q: Quote }[],
+  quote_source?: StoredSettingVariable,
 };

@@ -3,6 +3,9 @@ const SETTINGS_KEYS: string[] = [
   'last_changed',
   'user_name',
   'backdrop_color',
+  'current_quote',
+  'quote_history',
+  'quote_source',
 ];
 
 export { SETTINGS_KEYS };
