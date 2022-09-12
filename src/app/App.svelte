@@ -1,6 +1,7 @@
 <script lang="ts">
   import './app.css';
   import { settingsOpen } from 'src/app/stores';
+  import Background, { RequestButton, AuthorWidget } from '@features/background';
   import Clock from '@features/clock.svelte';
   import SettingsModal from '@features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
@@ -19,7 +20,7 @@
 
     <div class="bottom-row">
       <div class="left-bottom-content">
-      <button on:click={requestNewBackground}>New background</button>
+        <AuthorWidget />
       </div>
       <div class="center-bottom-content">
         <QuoteWidget />

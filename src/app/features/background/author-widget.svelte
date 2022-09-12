@@ -1,39 +1,66 @@
 <script lang="ts">
   import { isEmpty } from 'lodash-es';
   import { photos, isBackgroundChanging } from 'src/app/stores';
+  import { ArrowTopRightOnSquare } from '@steeze-ui/heroicons';
+  import { Icon } from '@steeze-ui/svelte-icon';
 
   $: data = $photos[0];
   $: loaded = !isEmpty(data);
-  $: location = `${data?.location_city}, ${data?.location_country}`;
 
 </script>
 
 {#if loaded}
+
   <div class="author-widget" class:hide={$isBackgroundChanging}>
-    <div class="location">{location}</div>
-    <div class="author-name">
-      <a href={data.url} alt="unsplash image link" target="_blank">
-        {data?.user_name}
-      </a>
-    </div>
+    <a href={data.url} alt="unsplash image link" target="_blank" >
+      <div class="content">
+        <div class="location">{data.location}</div>
+        <div class="author-name">
+          {data.user_name}
+          <Icon src={ArrowTopRightOnSquare} size={"1em"} />
+        </div>
+      </div>
+    </a>
   </div>
 {/if}
 
 <style>
   .author-widget {
+    transition: all .4s;
+    font-weight: 300;
+    font-size: .9rem;
+    width: fit-content;
+    display: flex;
+  }
+  .author-widget:hover .content {
+    transform: translateY(-50%);
+  }
+  .author-widget:hover .author-name {
+    opacity: .5;
+  }
+  a {
+    all: unset;
+    cursor: pointer;
+    padding: 2rem;
+  }
+  .content {
     display: flex;
     flex-direction: column;
-    transition: all .4s;
-    font-size: .8em;
-    font-weight: 300;
+    transition: transform .5s;
   }
   .hide {
     opacity: 0;
-    transform: translateY(-1em);
+    transform: translateY(1em);
   }
-  :global(.author-name > a){
-    all: unset;
-    cursor: pointer;
+
+  .author-name {
+    margin-top: .2rem;
+    opacity: 0;
+    position: absolute;
+    transform: translateY(100%);
+    transition: all .5s;
+    display: flex;
+    gap: 1em;
   }
 
 </style>
