@@ -57,10 +57,6 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    color: white;
-    background:
-      radial-gradient(rgb(0 0 0 / 70%) -20%, transparent 30%),
-      radial-gradient(transparent 80%, rgb(0 0 0 / 51%) 125%);
     gap: 1em;
   }
   .greeting {
