@@ -2,7 +2,7 @@
   import './app.css';
   import { settingsOpen } from 'src/app/stores';
   import Background, { RequestButton, AuthorWidget } from '@features/background';
-  import Clock from '@features/clock.svelte';
+  import { ClockWidget } from '@features';
   import SettingsModal from '@features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { Cog6Tooth } from '@steeze-ui/heroicons';
@@ -14,7 +14,7 @@
   <Background />
   <div class="layout">
     <div class="center-content">
-      <Clock />
+      <ClockWidget />
       <div class="greeting"><span>Hello, Amaral</span></div>
     </div>
 
