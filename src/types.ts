@@ -21,11 +21,13 @@ export type BackgroundPhoto = {
   url: string,
   user_name: string,
   alt_description: string,
-  location_city: string,
-  location_country: string,
+  location: string,
+  img_color: string,
 };
 
 export type StoredSettings = {
-  current_bg: BackgroundPhoto,
-  last_changed: string,
+  current_bg?: BackgroundPhoto,
+  last_changed?: string,
+  user_name?: string,
+  backdrop_color?: StoredSettingVariable,
 };

@@ -1,5 +1,5 @@
-import { settingKeys } from './utils';
-import { isArray } from 'lodash-es';
+import { SETTINGS_KEYS } from './utils';
+import { isArray, isEmpty } from 'lodash-es';
 import { createApi } from 'unsplash-js';
 import type { Random } from "unsplash-js/dist/methods/photos/types";
 import type { BackgroundPhoto, StoredSettings } from "src/types";
@@ -32,15 +32,24 @@ async function newBackground(): Promise<BackgroundPhoto> {
     url: imgFetch.links.html,
     user_name: imgFetch.user.name,
     alt_description: imgFetch.alt_description,
-    location_city: imgFetch.location.city,
-    location_country: imgFetch.location.country,
+    location: imgFetch.location.name || 'Unknown',
+    img_color: imgFetch.color,
   };
 
   const last_changed = Date().toString();
 
+  const { backdrop_color } = await chrome.storage.local.get('backdrop_color');
+  const newBackdrop = {
+    setting: backdrop_color.setting,
+    value: backdrop_color.setting === 'auto'
+      ? imgFetch.color
+      : backdrop_color.value,
+  };
+
   const storedSettings: StoredSettings = {
     current_bg: photo,
     last_changed,
+    backdrop_color: newBackdrop,
   };
 
   await chrome.storage.local.set(storedSettings);
@@ -64,20 +73,31 @@ async function init(): Promise<BackgroundPhoto> {
     current_bg,
     last_changed,
     user_name,
-  } = await chrome.storage.local.get(settingKeys) as StoredSettings;
+    backdrop_color,
+  } = await chrome.storage.local.get(SETTINGS_KEYS) as StoredSettings;
 
-  if (!last_changed) {
+  if (isEmpty(last_changed)) {
     const date = new Date().toString();
     await chrome.storage.local.set({ last_changed: date });
   }
 
-  if (!current_bg) {
-    photo = await newBackground();
+  photo = isEmpty(current_bg)
+    ? await newBackground()
+    : current_bg;
+
+  if (isEmpty(backdrop_color) ) {
+    await chrome.storage.local.set({
+      backdrop_color: {
+        setting: 'auto',
+        value: photo.img_color,
+      },
+    });
+  }
   }
 
   console.log({ current_bg, last_changed, user_name });
 
-  return photo || current_bg;
+  return photo;
 }
 
 function onMessage(request, sender, sendResponse) {

@@ -1,7 +1,8 @@
-const settingKeys: string[] = [
+const SETTINGS_KEYS: string[] = [
   'current_bg',
   'last_changed',
   'user_name',
+  'backdrop_color',
 ];
 
-export { settingKeys };
+export { SETTINGS_KEYS };
