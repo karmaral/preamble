@@ -45,3 +45,21 @@ export type StoredSettings = {
   quote_history?: { date: string, q: Quote }[],
   quote_source?: StoredSettingVariable,
 };
+
+
+export type SettingsItem = {
+  item_key: string,
+  title: string,
+  description: string,
+  input_type: string,
+  input_label?: string,
+  enum_options?: { label: string, value: string }[],
+  direction?: string,
+};
+export type SettingsDataEntry = {
+  label: string,
+  settings: SettingsItem[],
+};
+export interface SettingsData {
+  [key: string]: SettingsDataEntry
+}
