@@ -25,6 +25,7 @@
         <QuoteWidget />
       </div>
       <div class="right-bottom-content">
+        <RequestButton />
         <button
           class="btn-ui-big btn-settings"
           class:open={$settingsOpen}
