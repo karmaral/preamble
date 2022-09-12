@@ -43,10 +43,10 @@
   .background {
     position: fixed;
     inset: 0;
-    background: white;
+    background: var(--backdrop-color);
     z-index: 0;
   }
-  .bg-overlay{
+  .bg-overlay {
     position: absolute;
     inset: 0;
     background-image: url('../bg-overlay.png');
@@ -59,5 +59,8 @@
   img {
     opacity: 0;
     position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
