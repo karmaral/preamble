@@ -1,31 +1,54 @@
 <script lang="ts">
   import './app.css';
-  import { requestNewBackground } from '@lib/middleware';
-  import Background from '@features/background';
+  import { settingsOpen } from 'src/app/stores';
   import Clock from '@features/clock.svelte';
+  import SettingsModal from '@features/settings';
+  import { Icon } from '@steeze-ui/svelte-icon';
+  import { Cog6Tooth } from '@steeze-ui/heroicons';
 
+  const handleToggleSettings = (toggle : boolean) => $settingsOpen = toggle;
 </script>
 
 <main>
   <Background />
-  <div class='layout'>
-    <div class='layout-content'>
+  <div class="layout">
+    <div class="center-content">
       <Clock />
-      <div class='greeting'><span>Hello, Amaral</span></div>
+      <div class="greeting"><span>Hello, Amaral</span></div>
+    </div>
 
+    <div class="bottom-row">
+      <div class="left-bottom-content">
       <button on:click={requestNewBackground}>New background</button>
+      </div>
+      <div class="center-bottom-content">
+        <QuoteWidget />
+      </div>
+      <div class="right-bottom-content">
+        <button
+          class="btn-ui-big btn-settings"
+          class:open={$settingsOpen}
+          on:click={() => handleToggleSettings(true)}
+        >
+          <Icon src={Cog6Tooth} size={"1em"} stroke-width={"1"} />
+        </button>
+      </div>
     </div>
 
   </div>
+  <SettingsModal isOpen={$settingsOpen} handleClose={() => handleToggleSettings(false)}/>
 </main>
 
 <style>
   .layout {
     position: fixed;
     inset: 0;
-    z-index: 1;
+    color: white;
+    z-index: 5;
+    animation: fadeIn .8s;
+    animation-fill-mode: backwards;
   }
-  .layout-content {
+  .center-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,16 +66,35 @@
     font-weight: 300;
     line-height: 1;
   }
-  button {
-    all: unset;
-    cursor: pointer;
-    padding: 1rem;
-    background-color: rgb(0 0 0 / 25%);
-    border-radius: 2em;
+
+  .bottom-row {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: opacity 0.23s cubic-bezier(0.4, 0, 1, 1);
   }
-  button:hover {
-    background-color: rgb(0 0 0 / 40%);
+  .left-bottom-content { flex-basis: 33%; }
+  .center-bottom-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40vmin;
+    flex-basis: 50%;
+  }
+  .right-bottom-content {
+    padding: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    min-width: 16vmin;
+    flex-direction: column;
+    flex-basis: 33%;
+  }
+  .btn-settings.open {
+    transform: rotate(30deg);
   }
 </style>
