@@ -30,13 +30,14 @@
   {#if $photos.length}
     {#each $photos as photo (photo.id)}
       <img
+        class="bg"
         on:load={handleTransition}
         src={photo.src}
         alt={photo.alt_description}
       >
     {/each}
   {/if}
-  <div class="bg-overlay"></div>
+  <img src="../../bg-overlay.png" alt="" class="bg-overlay" />
 </div>
 
 <style>
@@ -49,18 +50,18 @@
   .bg-overlay {
     position: absolute;
     inset: 0;
-    background-image: url('../bg-overlay.png');
-    background-size: cover;
-    background-position: center;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
     mix-blend-mode: multiply;
     z-index: 2;
     transition: opacity .5s;
   }
   img {
-    opacity: 0;
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+  img.bg { opacity: 0; }
 </style>
