@@ -81,7 +81,7 @@
     align-items: center;
     justify-content: center;
     min-width: 40vmin;
-    flex-basis: 50%;
+    flex-basis: 70%;
   }
   .right-bottom-content {
     padding: 2rem;

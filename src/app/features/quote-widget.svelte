@@ -3,12 +3,18 @@
 
   $: loaded = Boolean($dailyQuote);
 
+  function isLarge(quoteText: string) {
+    const words = quoteText.split(' ');
+    return words.length > 20;
+  }
+  $: large = loaded && isLarge($dailyQuote.text);
+
 </script>
 
 {#if loaded}
   <div class="quote-widget">
     <div class="wrap">
-      <div class="content">
+      <div class="content" class:large>
         <div class="quote">
           "{$dailyQuote.text}"
         </div>
@@ -28,7 +34,7 @@
     display: flex;
   }
   .quote-widget:hover .content {
-    transform: translateY(-70%);
+    transform: translateY(-1em);
   }
   .quote-widget:hover .author {
     opacity: .7;
@@ -42,12 +48,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     transition: transform .5s;
+    position: relative;
   }
+  .content.large { font-size: .9em; }
   .author {
-    margin-top: .2rem;
     opacity: 0;
     position: absolute;
+    bottom: -.4rem;
     transform: translateY(100%);
     transition: all .5s;
     display: flex;
