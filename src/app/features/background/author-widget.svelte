@@ -42,6 +42,7 @@
     all: unset;
     cursor: pointer;
     padding: 2rem;
+    min-width: 10rem;
   }
   .content {
     display: flex;
@@ -60,7 +61,8 @@
     transform: translateY(100%);
     transition: all .5s;
     display: flex;
-    gap: 1em;
+    align-items: center;
+    gap: .5em;
   }
 
 </style>
