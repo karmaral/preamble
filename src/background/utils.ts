@@ -7,5 +7,17 @@ const SETTINGS_KEYS: string[] = [
   'quote_history',
   'quote_source',
 ];
+const QUOTE_RESET_TIME = 4;
 
-export { SETTINGS_KEYS };
+const SETTINGS_DEFAULTS = {
+  quote_source: {
+    setting: 'They Said So',
+    value: 'https://quotes.rest/qod',
+  },
+};
+
+export {
+  SETTINGS_DEFAULTS,
+  SETTINGS_KEYS,
+  QUOTE_RESET_TIME,
+};

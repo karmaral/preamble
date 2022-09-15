@@ -30,6 +30,7 @@ export type Quote = {
   text: string,
   author: string,
   source: string,
+  date: string,
 };
 export type StoredSettingVariable = {
   setting: string,
@@ -42,7 +43,7 @@ export type StoredSettings = {
   user_name?: string,
   backdrop_color?: StoredSettingVariable,
   current_quote?: Quote,
-  quote_history?: { date: string, q: Quote }[],
+  quote_history?: Quote[],
   quote_source?: StoredSettingVariable,
 };
 
