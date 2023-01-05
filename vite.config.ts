@@ -10,8 +10,8 @@ export default defineConfig({
     resolve: {
         alias: {
             src: srcDir,
-            '@features': resolve(srcDir, 'app', 'features'),
-            '@lib': resolve(srcDir, 'app', 'lib'),
+            '$features': resolve(srcDir, 'app', 'features'),
+            '$lib': resolve(srcDir, 'app', 'lib'),
         },
     },
     build: {
@@ -21,7 +21,7 @@ export default defineConfig({
                 background: resolve(srcDir, 'background', 'index.ts'),
             },
             output: {
-                entryFileNames: (chunk) => `src/${chunk.name}/index.js`,
+                entryFileNames: (chunk) => `src/${chunk.name}.js`,
             },
         },
     },

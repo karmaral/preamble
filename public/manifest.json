@@ -1,6 +1,6 @@
 {
-    "name": "Lobby - New Tab",
-    "description": "A minimal newtab lobby for your browser. Inspired by Momentum",
+    "name": "Preamble - New Tab",
+    "description": "A minimal browsing preamble. Inspired by Momentum",
     "version": "0.1",
     "manifest_version": 3,
     "icons": {
@@ -10,7 +10,8 @@
         "128": "/icons/get_started128.png"
     },
     "background": {
-        "service_worker": "src/background/index.js"
+        "service_worker": "src/background.js",
+        "type": "module"
     },
     "action": {
         "default_icon": {
@@ -24,6 +25,7 @@
         "newtab": "src/app/index.html"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "geolocation"
     ]
 }

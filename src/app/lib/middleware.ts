@@ -1,11 +1,25 @@
 import type { BackgroundPhoto } from "src/types";
 
-export async function requestNewBackground(): Promise<BackgroundPhoto> {
+export function requestNewBackground() {
+  chrome.runtime.sendMessage({
+    action: 'request:new_bg',
+  });
+}
+
+export async function requestInit(): Promise<BackgroundPhoto> {
+  console.log('middleware: requestInit');
+  const position = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+  const geo = isError(position) ? position : {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+  };
+
   const request = await chrome.runtime.sendMessage({
-    action: 'bg:new',
+    action: 'request:init',
+    payload: { geolocation: geo },
   });
 
   return request.response;
 }
-
-export { };
