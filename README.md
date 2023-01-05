@@ -3,7 +3,7 @@ An extension for having a pleasant sight-seeing experience before embarking on y
 ## The goal
 This was meant as an attempt to clone the Momentum extension, and see how far I could get by just using free API's.
 
-The only caveat is that it will require you to have [a developer key for using the Unsplash API]().
+The only caveat is that it will require you to have [a developer key for using the Unsplash API](https://unsplash.com/developers).
 The weather is handled by requesting for `geolocation` and using [OpenMeteo](https://open-meteo.org), and the quotes are obtained from [They Said So](https://theysaidso.com).
 
 ## Disclaimer
