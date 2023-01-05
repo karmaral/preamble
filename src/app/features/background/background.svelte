@@ -37,7 +37,7 @@
       >
     {/each}
   {/if}
-  <img src="../../bg-overlay.png" alt="" class="bg-overlay" />
+  <img src="../../bg-overlay.png" alt="" class="overlay vignette" />
 </div>
 
 <style>
@@ -47,15 +47,19 @@
     background: var(--backdrop-color);
     z-index: 0;
   }
-  .bg-overlay {
+  .overlay {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: fill;
     mix-blend-mode: multiply;
     z-index: 2;
     transition: opacity .5s;
+  }
+  .overlay.vignette {
+    --strength: 1;
+    opacity: var(--strength);
+    object-fit: fill;
   }
   img {
     position: absolute;
