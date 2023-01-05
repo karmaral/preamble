@@ -7,8 +7,18 @@ export function requestNewBackground() {
 }
 
 export async function requestInit(): Promise<BackgroundPhoto> {
+  console.log('middleware: requestInit');
+  const position = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+  const geo = isError(position) ? position : {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+  };
+
   const request = await chrome.runtime.sendMessage({
     action: 'request:init',
+    payload: { geolocation: geo },
   });
 
   return request.response;

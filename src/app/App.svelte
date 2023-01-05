@@ -5,6 +5,7 @@
   import {
     ClockWidget,
     QuoteWidget,
+    WeatherWidget,
     } from '$features';
   import SettingsModal from '$features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
@@ -16,19 +17,27 @@
 <main>
   <Background />
   <div class="layout">
+    <div class="top-row">
+      <div class="top-left-content"></div>
+      <div class="top-center-content"></div>
+      <div class="top-right-content">
+        <WeatherWidget />
+      </div>
+
+    </div>
     <div class="center-content">
       <ClockWidget />
       <div class="greeting"><span>Hello, Amaral</span></div>
     </div>
 
     <div class="bottom-row">
-      <div class="left-bottom-content">
+      <div class="bottom-left-content">
         <AuthorWidget />
       </div>
-      <div class="center-bottom-content">
+      <div class="bottom-center-content">
         <QuoteWidget />
       </div>
-      <div class="right-bottom-content">
+      <div class="bottom-right-content">
         <RequestButton />
         <button
           class="btn-ui-big btn-settings"
@@ -68,6 +77,23 @@
     line-height: 1;
   }
 
+  .top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    transition: opacity 0.23s cubic-bezier(0.4, 0, 1, 1);
+  }
+  .top-row > div { flex-basis: 33%; }
+  .top-right-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 2rem;
+  }
   .bottom-row {
     display: flex;
     align-items: flex-end;
@@ -78,15 +104,15 @@
     bottom: 0;
     transition: opacity 0.23s cubic-bezier(0.4, 0, 1, 1);
   }
-  .left-bottom-content { flex-basis: 33%; }
-  .center-bottom-content {
+  .bottom-left-content { flex-basis: 33%; }
+  .bottom-center-content {
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 40vmin;
-    flex-basis: 70%;
+    flex-basis: 90%;
   }
-  .right-bottom-content {
+  .bottom-right-content {
     padding: 2rem;
     display: flex;
     align-items: flex-end;

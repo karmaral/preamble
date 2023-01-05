@@ -1,11 +1,11 @@
 import preamble from './preamble';
 import { isArray, isEmpty } from 'lodash-es';
 import { createApi } from 'unsplash-js';
-import type { Random } from "unsplash-js/dist/methods/photos/types";
+import type { Random } from 'unsplash-js/dist/methods/photos/types';
 import type {
   BackgroundPhoto,
   StoredSettings,
-} from "src/types";
+} from 'src/types';
 
 const collections = [
   '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */
@@ -71,7 +71,9 @@ async function sendUpdatedBackground(photo: BackgroundPhoto) {
 }
 
 
-async function init(): Promise<BackgroundPhoto> {
+async function init(initParams): Promise<BackgroundPhoto> {
+  console.log('init', initParams);
+  const { geolocation } = initParams;
   const {
     current_bg,
     last_changed,
@@ -97,7 +99,8 @@ async function init(): Promise<BackgroundPhoto> {
     });
   }
 
-  preamble.quotes.init();
+  await preamble.quotes.init();
+  await preamble.weather.init({ geolocation });
 
   return photo;
 }
@@ -106,7 +109,7 @@ function onMessage(request, sender, sendResponse) {
   console.log(`bg >> onMessage: ${request.action}`);
   switch (request.action) {
     case 'request:init':
-      init().then(response => sendResponse({ response }));
+      init(request.payload).then(response => sendResponse({ response }));
       break;
     case 'request:new_bg':
       newBackground();

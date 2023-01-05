@@ -14,6 +14,10 @@ const SETTINGS_DEFAULTS = {
     setting: 'They Said So',
     value: 'https://quotes.rest/qod',
   },
+  weather_source: {
+    setting: 'Open Meteo',
+    value: 'https://api.open-meteo.com/v1/forecast',
+  },
 };
 
 export {

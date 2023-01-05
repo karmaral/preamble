@@ -25,6 +25,7 @@
         "newtab": "src/app/index.html"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "geolocation"
     ]
 }

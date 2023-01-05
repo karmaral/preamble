@@ -32,6 +32,19 @@ export type Quote = {
   source: string,
   date: string,
 };
+
+export type Weather = {
+  temperature: number,
+  time: string,
+  unit: string,
+  weathercode: number,
+  text: string,
+};
+export type Coordinates = {
+  latitude: number,
+  longitude: number,
+};
+
 export type StoredSettingVariable = {
   setting: string,
   value: string,
@@ -45,6 +58,10 @@ export type StoredSettings = {
   current_quote?: Quote,
   quote_history?: Quote[],
   quote_source?: StoredSettingVariable,
+  current_weather?: Weather,
+  weather_source?: StoredSettingVariable,
+  weather_unit?: StoredSettingVariable,
+  geolocation?: Coordinates,
 };
 
 
