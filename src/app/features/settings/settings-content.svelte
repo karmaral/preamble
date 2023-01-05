@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade, fly } from 'svelte/transition';
   import type { SettingsData } from 'src/types';
-  import _data from './settings-data.json';
+  import _data from './settings-data';
   import SettingsItem from './settings-item.svelte';
 
   let data: SettingsData = _data;
