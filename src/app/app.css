@@ -1,5 +1,5 @@
 :root {
-  --font-family: system-ui;
+  --font-family: 'Avenir', system-ui;
   --border-radius-s: .2rem;
 }
 
@@ -7,11 +7,13 @@
   box-sizing: border-box;
 }
 
+html { font-size: 1.5vmin; }
+
 body {
   font-family: var(--font-family), system-ui, sans-serif;
   font-size: 100%;
   user-select: none;
-  text-shadow: 0 1px .21em rgb(0 0 0 / 20%);
+  text-shadow: 0 1px .21em rgb(0 0 0 / 35%);
 }
 
 
