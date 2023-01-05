@@ -5,7 +5,7 @@
 
   function isLarge(quoteText: string) {
     const words = quoteText.split(' ');
-    return words.length > 20;
+    return words.length > 30;
   }
   $: large = loaded && isLarge($dailyQuote.text);
 
@@ -29,7 +29,7 @@
 <style>
   .quote-widget {
     transition: all .4s;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     width: fit-content;
     display: flex;
   }
