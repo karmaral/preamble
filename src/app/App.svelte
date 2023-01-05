@@ -1,9 +1,12 @@
 <script lang="ts">
   import './app.css';
   import { settingsOpen } from 'src/app/stores';
-  import Background, { RequestButton, AuthorWidget } from '@features/background';
-  import { ClockWidget, QuoteWidget } from '@features';
-  import SettingsModal from '@features/settings';
+  import Background, { RequestButton, AuthorWidget } from '$features/background';
+  import {
+    ClockWidget,
+    QuoteWidget,
+    } from '$features';
+  import SettingsModal from '$features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { Cog6Tooth } from '@steeze-ui/heroicons';
 

@@ -10,8 +10,8 @@ export default defineConfig({
     resolve: {
         alias: {
             src: srcDir,
-            '@features': resolve(srcDir, 'app', 'features'),
-            '@lib': resolve(srcDir, 'app', 'lib'),
+            '$features': resolve(srcDir, 'app', 'features'),
+            '$lib': resolve(srcDir, 'app', 'lib'),
         },
     },
     build: {

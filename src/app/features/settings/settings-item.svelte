@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { SettingsItem } from 'src/types';
-  import { InputEnum } from '@features/ui';
+  import { InputEnum, InputSlider } from '$features/ui';
 
   export let data : SettingsItem;
   let {
@@ -10,8 +10,6 @@
     input_label,
     input_type,
   } = data;
-
-  // export let callBack = () => console.log(elem)
 
 </script>
 
@@ -28,6 +26,8 @@
   <div class="item-action">
     {#if input_type === 'enum'}
       <InputEnum options={data.enum_options}/>
+    {:else if input_type === 'range'}
+      <InputSlider />
     {:else}
       <label for="{item_key}">
         {input_label}

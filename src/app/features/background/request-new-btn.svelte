@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { requestNewBackground } from '@lib/middleware';
+  import { requestNewBackground } from '$lib/middleware';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { ArrowPath } from '@steeze-ui/heroicons';
   import { isBackgroundChanging } from 'src/app/stores';
