@@ -37,6 +37,17 @@ export default {
         ],
         input_label: 'Black | White | Auto',
       },
+      {
+        item_key: 'font-family',
+        title: 'Font Family',
+        description: 'Choose a font or type a custom one (must be installed locally).',
+        input_type: 'select',
+        options: [
+          { label: 'Avenir (local)', value: 'Avenir' },
+          { label: 'System UI', value: 'system-ui' },
+          { label: 'Custom', value: '', custom: true },
+        ],
+      },
     ],
   },
   behaviour : {

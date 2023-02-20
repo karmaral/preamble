@@ -1,6 +1,6 @@
 <script lang="ts">
   import './app.css';
-  import { settingsOpen } from 'src/app/stores';
+  import { settingsOpen, globalFont } from 'src/app/stores';
   import Background, { RequestButton, AuthorWidget } from '$features/background';
   import {
     ClockWidget,
@@ -12,6 +12,12 @@
   import { Cog6Tooth } from '@steeze-ui/heroicons';
 
   const handleToggleSettings = (toggle : boolean) => $settingsOpen = toggle;
+  const handleFontChange = () => {
+    document.body.style.setProperty('--font-family', `${$globalFont}`);
+  };
+  $: if ($globalFont) {
+    handleFontChange();
+  }
 </script>
 
 <main>
