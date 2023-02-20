@@ -15,7 +15,7 @@ export default {
         title: 'Quotes',
         description: 'The daily quote will change at 04:00am',
         input_type: 'enum',
-        enum_options: [
+        options: [
           { label: 'They Said So', value: 'https://quotes.rest/qod' },
           { label: 'GitHub', value: 'https://api.github.com/zen' },
         ],
@@ -30,7 +30,7 @@ export default {
         title: 'Backdrop Color',
         description: 'Force the backdrop color or let Preamble decide using the time of day.',
         input_type: 'enum',
-        enum_options: [
+        options: [
           { label: 'Auto', value: 'auto' },
           { label: 'Black', value: 'black' },
           { label: 'White', value: 'white' },
@@ -54,7 +54,7 @@ export default {
         title: 'Clock Display Format',
         description: '',
         input_type: 'enum',
-        enum_options: [
+        options: [
           { label: '12h', value: '12' },
           { label: '24h', value: '24' },
         ],

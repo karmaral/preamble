@@ -1,7 +1,8 @@
 <script lang="ts">
+  import type { SettingsOption } from 'src/types';
   import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@rgossiaux/svelte-headlessui';
 
-  export let options = [{
+  export let options: SettingsOption[] = [{
     label: 'Default',
     value: 'default',
   }];
@@ -9,7 +10,7 @@
 
   let selected = options[0].value;
 
-  function handleChange(e) {
+  function handleChange(e: CustomEvent) {
     console.log('Changed', e.detail);
     // callback(value: string);
     selected = e.detail;
@@ -22,7 +23,7 @@
     value={selected}
     on:change={handleChange}
   >
-    {#each options as option}
+    {#each options as option (option.value)}
       <RadioGroupOption
         value={option.value}
         class="option {selected === option.value ? 'selected' : ''}"
