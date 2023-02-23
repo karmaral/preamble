@@ -6,6 +6,7 @@
     ClockWidget,
     QuoteWidget,
     WeatherWidget,
+    GreetingWidget,
     } from '$features';
   import SettingsModal from '$features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
@@ -33,7 +34,7 @@
     </div>
     <div class="center-content">
       <ClockWidget />
-      <div class="greeting"><span>Hello, Amaral</span></div>
+      <GreetingWidget />
     </div>
 
     <div class="bottom-row">
@@ -77,12 +78,6 @@
     height: 100%;
     gap: 1em;
   }
-  .greeting {
-    font-size: 4rem;
-    font-weight: 300;
-    line-height: 1;
-  }
-
   .top-row {
     display: flex;
     align-items: flex-start;
