@@ -13,8 +13,9 @@ import {
   isAfter,
 } from 'date-fns';
 import type {
-  Quote,
+  Storage,
   StoredSettings,
+  Quote,
   Weather,
   Coordinates,
 } from "src/types";
@@ -30,7 +31,7 @@ const preamble = {
 
       if (isEmpty(source)) {
         const { weather_source } = SETTINGS_DEFAULTS;
-        await chrome.storage.local.set({ weather_source });
+        await preamble.settings.set({ weather_source });
       }
       if (isEmpty(geolocation)) {
         console.log('empty geolocation setting');
@@ -147,12 +148,12 @@ const preamble = {
       const source = await preamble.settings.getQuoteSource();
 
       if (isEmpty(source)) {
-        const { quote_source } = SETTINGS_DEFAULTS;
-        await chrome.storage.local.set({ quote_source });
+        const { quotes_source } = SETTINGS_DEFAULTS;
+        await preamble.settings.set({ quotes_source });
       }
       if (isEmpty(history)) {
-        const quote_history = [];
-        await chrome.storage.local.set({ quote_history });
+        const quotes_history = [];
+        await preamble.settings.set({ quotes_history });
       }
       if (isEmpty(currentQuote)) {
         await this.new();
@@ -166,13 +167,12 @@ const preamble = {
       return;
     },
     async getCurrent(): Promise<Quote> {
-      const { current_quote } = await chrome.storage.local.get('current_quote') as StoredSettings;
+      const { current_quote } = await chrome.storage.local.get('current_quote') as Storage;
       return current_quote;
     },
     async getHistory(): Promise<Quote[]> {
-      const { quote_history } = await chrome.storage.local.get('quote_history') as StoredSettings;
-
-      return quote_history;
+      const { quotes_history } = await chrome.storage.local.get('quotes_history') as Storage;
+      return quotes_history;
     },
     async fetch(): Promise<Quote> {
       const url = await preamble.settings.getQuoteSource();
@@ -197,14 +197,14 @@ const preamble = {
     },
     async new() {
       const newQuote = await this.fetch();
-      const quoteHistory = await this.getHistory();
+      const quotesHistory = await this.getHistory();
 
-      const storedSettings: StoredSettings = {
+      const storage: Partial<Storage> = {
         current_quote: newQuote,
-        quote_history: [...quoteHistory, newQuote],
+        quotes_history: [...quotesHistory, newQuote],
       };
 
-      await chrome.storage.local.set(storedSettings);
+      await chrome.storage.local.set(storage);
       await preamble.renderer.updateQuote(newQuote);
     },
     async sync(quote: Quote) {
@@ -224,20 +224,31 @@ const preamble = {
     },
   },
   settings: {
+    async set(updateData: Record<string, unknown>): Promise<void> {
+      const settings = await preamble.settings.getAll();
+      Object.keys(updateData).forEach((k) => {
+        settings[k] = updateData[k];
+      });
+      await chrome.storage.local.set({ settings });
+    },
+    async getAll(): Promise<StoredSettings> {
+      const { settings } = await chrome.storage.local.get('settings');
+      return settings;
+    },
     async getQuoteSource(): Promise<string> {
-      const { quote_source } = await chrome.storage.local.get('quote_source') as StoredSettings;
-      return quote_source?.value;
+      const { quotes_source } = await preamble.settings.getAll();
+      return quotes_source?.value;
     },
     async getWeatherSource(): Promise<string> {
-      const { weather_source } = await chrome.storage.local.get('weather_source') as StoredSettings;
+      const { weather_source } = await preamble.settings.getAll();
       return weather_source?.value;
     },
     async getWeatherUnit(): Promise<string> {
-      const { weather_unit } = await chrome.storage.local.get('weather_unit') as StoredSettings;
+      const { weather_unit } = await preamble.settings.getAll();
       return weather_unit?.value;
     },
     async getGeolocation(): Promise<Coordinates> {
-      const { geolocation } = await chrome.storage.local.get('geolocation') as StoredSettings;
+      const { geolocation } = await chrome.storage.local.get('geolocation') as Storage;
       return geolocation;
     },
   },

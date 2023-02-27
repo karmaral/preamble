@@ -1,4 +1,4 @@
-import type { BackgroundPhoto } from "src/types";
+import type { InitData } from "src/types";
 
 export function requestNewBackground() {
   chrome.runtime.sendMessage({
@@ -6,7 +6,7 @@ export function requestNewBackground() {
   });
 }
 
-export async function requestInit(): Promise<BackgroundPhoto> {
+export async function requestInit(): Promise<InitData> {
   console.log('middleware: requestInit');
   const position = await new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -25,7 +25,7 @@ export async function requestInit(): Promise<BackgroundPhoto> {
 }
 export function updateSetting(payload: { key: string; label: string; value: unknown }) {
   chrome.runtime.sendMessage({
-    action: 'setting:update',
+    action: 'update:setting',
     payload,
   });
 }

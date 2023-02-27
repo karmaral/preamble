@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { SettingsItem, SettingsOption } from 'src/types';
   import { InputEnum, InputSelect, InputSlider, InputText } from '$features/ui';
+  import { settings } from 'src/app/stores';
   import { updateSetting } from '$lib/middleware';
 
 
@@ -13,10 +14,11 @@
     input_type,
   } = data;
 
+  $: currentValue = $settings[item_key]?.value;
   let customActive = false;
   let customData;
 
-  function handleSelectChange(opt:SettingsOption) {
+  function handleChange(opt: SettingsOption) {
     const { value, label } = opt;
     const payload = { key: item_key, value, label }
     updateSetting(payload);
@@ -45,7 +47,7 @@
     {#if input_type === 'enum'}
       <InputEnum options={data.options}/>
     {:else if input_type === 'select'}
-      <InputSelect options={data.options} onChange={handleSelectChange} />
+      <InputSelect options={data.options} onChange={handleChange} />
     {:else if input_type === 'range'}
       <InputSlider />
     {:else}
