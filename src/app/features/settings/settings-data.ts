@@ -3,7 +3,7 @@ export default {
     label: 'Data Fetching',
     settings: [
       {
-        item_key: 'unsplash-public-key',
+        item_key: 'unsplash_public_key',
         title: 'Unsplash API',
         description: 'Currently this app leverages the developer API from Unsplash.\n You will have to create an account and use its key in order for the app to work properly.',
         input_type: 'text',
@@ -11,7 +11,7 @@ export default {
         direction: 'vertical',
       },
       {
-        item_key: 'quotes-source',
+        item_key: 'quotes_source',
         title: 'Quotes',
         description: 'The daily quote will change at 04:00am',
         input_type: 'enum',
@@ -26,7 +26,7 @@ export default {
     label: 'Interface',
     settings: [
       {
-        item_key: 'backdrop-color',
+        item_key: 'backdrop_color',
         title: 'Backdrop Color',
         description: 'Force the backdrop color or let Preamble decide using the time of day.',
         input_type: 'enum',
@@ -38,7 +38,7 @@ export default {
         input_label: 'Black | White | Auto',
       },
       {
-        item_key: 'font-family',
+        item_key: 'font_family',
         title: 'Font Family',
         description: 'Choose a font or type a custom one (must be installed locally).',
         input_type: 'select',
@@ -54,14 +54,14 @@ export default {
     label: 'Behaviour',
     settings: [
       {
-        item_key: 'background-change-interval',
+        item_key: 'background_change_interval',
         title: 'Background change',
         description: 'How often should the background change?\nDefault mode will change every day at 0:00.',
         input_type: 'range',
         input_label: '',
       },
       {
-        item_key: 'clock-display-format',
+        item_key: 'clock_display_format',
         title: 'Clock Display Format',
         description: '',
         input_type: 'enum',

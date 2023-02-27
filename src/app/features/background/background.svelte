@@ -44,7 +44,7 @@
   .background {
     position: fixed;
     inset: 0;
-    background: var(--backdrop-color);
+    background: var(--backdrop_color);
     z-index: 0;
   }
   .overlay {
