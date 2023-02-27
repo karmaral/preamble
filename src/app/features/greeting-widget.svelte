@@ -1,13 +1,16 @@
 <script lang="ts">
   import { tick } from 'svelte';
 
-  let name = 'Amaral';
+  import { updateSetting } from '$lib/middleware';
+  import { settings } from 'src/app/stores';
 
   let isRenaming = false;
   let elemRef: HTMLElement;
 
-  let renameAction = console.log
+  let renameAction = updateSetting;
 
+  $: nameLoaded = $settings?.user_name;
+  $: name = $settings?.user_name?.value || 'nameless person!';
   function handleKeys(e: KeyboardEvent): void {
     if (!isRenaming) return;
     if (e.key === 'Enter' || e.key === 'Escape') {
@@ -26,22 +29,30 @@
     isRenaming = false;
     await tick();
     window.getSelection().removeAllRanges();
-    renameAction(elemRef.innerText);
+    if (name === elemRef.innerText) return;
+    const payload = {
+      key: 'user_name',
+      label: '',
+      value: elemRef.innerText,
+    };
+    renameAction(payload);
   }
 </script>
 
 <div class="greeting">
-  Hello,
-  <div
-    class:active={isRenaming}
-    contenteditable={isRenaming}
-    on:click={handleRename}
-    on:blur={handleSubmit}
-    on:keydown={handleKeys}
-    bind:this={elemRef}
-  >
-    <span>{name}</span>
-  </div>
+  {#if nameLoaded}
+    Hello,
+    <span
+      class:active={isRenaming}
+      contenteditable={isRenaming}
+      on:click={handleRename}
+      on:blur={handleSubmit}
+      on:keydown={handleKeys}
+      bind:this={elemRef}
+    >
+      {name}
+    </span>
+  {/if}
 </div>
 
 <style>
@@ -50,37 +61,35 @@
     font-weight: 300;
     line-height: 1;
   }
-  .greeting > div {
+  .greeting > span {
     display: inline-flex;
     position: relative;
+    z-index: 1;
     user-select: text;
   }
-  .greeting > div:focus-visible {
+  .greeting > span:focus-visible {
     outline: none;
   }
-  .greeting > div::before {
+  .greeting > span::before {
     content: "";
     width: calc(100% + .3em);
     height: calc(100% + .3em);
     position: absolute;
-    background-color: hsl(0 0% 0% / 8%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     backdrop-filter: blur(10px);
     border-radius: .5rem;
-    border-bottom:2px solid;
     visibility: hidden;
+    opacity: 0;
+    transition:opacity .3s, visibility 0s;
+    transition-delay: 0s, .3s;
+    box-shadow: 0 0 1.2em hsl(0 0% 0% / 45%);
+    z-index: -1;
   }
-  .greeting > div.active::before {
+  .greeting > span.active::before {
     visibility: visible;
-  }
-  span {
-    all: unset;
-    font-size: inherit;
-    font-family: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    position: relative;
+    opacity: 1;
+    transition-delay: 0s;
   }
 </style>

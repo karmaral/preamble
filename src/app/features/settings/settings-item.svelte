@@ -51,7 +51,12 @@
     {:else if input_type === 'range'}
       <InputSlider />
     {:else}
-      <InputText key={item_key} label={input_label} type={input_type} />
+      <InputText
+        key={item_key}
+        label={input_label}
+        value={currentValue}
+        onChange={handleChange}
+      />
     {/if}
   </div>
 </div>

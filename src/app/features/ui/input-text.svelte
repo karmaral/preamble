@@ -1,15 +1,21 @@
 <script lang="ts">
+  import type { SettingsOption } from "src/types";
 
   export let key = '';
   export let label = '';
   export let value = '';
 
+  export let onChange: (opt: SettingsOption) => void;
+  function handleSubmit(e) {
+    const opt = { value: e.target.value, label };
+    onChange(opt);
+  }
 </script>
 
 <div class="ui-input-text">
   <label for="{key}">
     {label}
-    <input type="text" name="{key}" id="" {value} on:change>
+    <input type="text" name="{key}" id="" {value} on:blur={handleSubmit}>
   </label>
 </div>
 
@@ -24,20 +30,19 @@
   input {
     padding: .5rem;
     width: 80%;
-    border: none;
-    border-bottom: 1px solid rgb(255 255 255 / 30%);
+    border: 1px solid hsl(0 0% 100% / 8%);
     border-radius: .2rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
     background: none;
     font-size: 1rem;
     font-family: inherit;
-    color: white;
+    box-shadow: none;
+    color: hsl(0 0% 100% / 70%);
     transition: all .2s;
   }
   input:focus-visible {
     outline: none;
-    border-bottom-color: rgb(255 255 255 / 70%);
-    background-color: rgb(0 0 0 / 15%);
+    color: hsl(0 0% 100% / 90%);
+    border-color: hsl(0 0% 100% / 20%);
+    box-shadow: inset 0 0 2em -1em hsl(0deg 0% 0% / 50%);
   }
 </style>
