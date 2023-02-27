@@ -35,7 +35,7 @@
   <div class="item-info">
     <h3>{title}</h3>
     {#if description}
-      <p class="description">{description} </p>
+      <p class="description">{description}</p>
     {/if}
     {#if customActive}
       <div class="custom">

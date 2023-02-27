@@ -1,6 +1,7 @@
 :root {
   --font_family: 'Avenir', system-ui;
   --border-radius-s: .2rem;
+  --focus-overlay-background: hsl(0 0% 0% / 15%);
 }
 
 *,*::before,*::after {
