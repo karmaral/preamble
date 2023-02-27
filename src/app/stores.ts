@@ -1,18 +1,25 @@
 import { requestInit } from '$lib/middleware';
-import type { Weather, Quote, BackgroundPhoto } from 'src/types';
+import type {
+  Weather,
+  Quote,
+  BackgroundPhoto,
+  StoredSettings,
+} from 'src/types';
 import { writable } from 'svelte/store';
 
 
-export let settingsOpen = writable<boolean>(false);
+export const settings = writable<StoredSettings>({} as StoredSettings);
+export const settingsOpen = writable<boolean>(false);
+
 export let photos = writable<BackgroundPhoto[]>([] as BackgroundPhoto[]);
 export let isBackgroundChanging = writable<boolean>(false);
 export let dailyQuote = writable<Quote>(null as Quote);
 export let currentWeather = writable<Weather>(null as Weather);
-export const globalFont = writable<string>('Avenir');
 
 async function initStores() {
-  const photo = await requestInit();
-  photos.set([photo]);
+  const res = await requestInit();
+  photos.set([res.photo]);
+  settings.set(res.settings);
 }
 
 function onMessage(request) {
@@ -25,6 +32,11 @@ function onMessage(request) {
       break;
     case 'update:weather':
       currentWeather.set(request.payload);
+      break;
+    case 'sync:settings':
+      settings.update((prev) => {
+        return { ...prev, ...request.payload };
+      });
       break;
     default: break;
   }
