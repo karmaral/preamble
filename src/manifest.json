@@ -1,0 +1,24 @@
+{
+  "name": "Preamble - New Tab",
+  "description": "A minimal browsing preamble. Inspired by Momentum",
+  "{{chrome}}.manifest_version": 3,
+  "{{firefox}}.manifest_version": 2,
+  "icons": {
+    "16": "/icons/get_started16.png",
+    "32": "/icons/get_started32.png",
+    "48": "/icons/get_started48.png",
+    "128": "/icons/get_started128.png"
+  },
+  "background": {
+    "{{chrome}}.service_worker": "src/background/index.ts",
+    "{{firefox}}.scripts": ["src/background/index.ts"],
+    "type": "module"
+  },
+  "chrome_url_overrides": {
+    "newtab": "src/app/index.html"
+  },
+  "permissions": [
+    "storage",
+    "geolocation"
+  ],
+}

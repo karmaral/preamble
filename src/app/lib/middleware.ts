@@ -1,7 +1,8 @@
 import type { InitData } from "src/types";
+import browser from 'webextension-polyfill';
 
 export function requestNewBackground() {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'request:new_bg',
   });
 }
@@ -16,15 +17,15 @@ export async function requestInit(): Promise<InitData> {
       longitude: position.coords.longitude,
   };
 
-  const request = await chrome.runtime.sendMessage({
+  const request = await browser.runtime.sendMessage({
     action: 'request:init',
     payload: { geolocation: geo },
   });
 
   return request.response;
 }
-export function updateSetting(payload: { key: string; label: string; value: unknown }) {
-  chrome.runtime.sendMessage({
+export function updateSetting(payload: SettingChangePayload) {
+  browser.runtime.sendMessage({
     action: 'update:setting',
     payload,
   });

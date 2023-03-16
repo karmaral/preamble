@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import preamble from './preamble';
 import { isArray, isEmpty } from 'lodash-es';
 import { createApi } from 'unsplash-js';
@@ -43,7 +44,7 @@ async function newBackground(): Promise<BackgroundPhoto> {
 
   const last_changed = Date().toString();
 
-  const { backdrop_color } = await chrome.storage.local.get('settings');
+  const { backdrop_color } = await preamble.settings.getAll();
   const newBackdrop = {
     setting: backdrop_color.setting,
     value: backdrop_color.setting.toLowerCase() === 'auto'
@@ -54,11 +55,10 @@ async function newBackground(): Promise<BackgroundPhoto> {
   const storage: Partial<Storage> = {
     current_bg: photo,
     last_changed,
-    settings: { backdrop_color: newBackdrop }
   };
 
-  await chrome.storage.local.set(storage);
-  sendUpdatedBackground(photo);
+  await browser.storage.local.set(storage);
+  await preamble.settings.set({ backdrop_color: newBackdrop });
 
   return photo;
 }
@@ -71,15 +71,19 @@ async function sendUpdatedBackground(photo: BackgroundPhoto) {
   });
 }
 
-function handleSettingUpdate(payload: { key: string, label?: string; value: unknown }) {
+function handleSettingUpdate(payload: SettingChangePayload) {
   const { key, label, value } = payload;
-  preamble.settings.set({ [key]: { setting: label, value } });
+  const updateData: Record<string, unknown> = { setting: label, value };
+  if (payload.custom) {
+    updateData.custom = true;
+  }
+  preamble.settings.set({ [key]: updateData });
 }
 
 async function init(initParams): Promise<InitData> {
   console.log('init', initParams);
   const { geolocation } = initParams;
-  const storage = await chrome.storage.local.get([
+  const storage = await browser.storage.local.get([
     'current_bg',
     'last_changed',
     'settings',
@@ -92,7 +96,7 @@ async function init(initParams): Promise<InitData> {
 
   if (isEmpty(last_changed)) {
     const date = new Date().toString();
-    await chrome.storage.local.set({ last_changed: date });
+    await browser.storage.local.set({ last_changed: date });
   }
 
   photo = isEmpty(current_bg)
@@ -130,7 +134,8 @@ function onMessage(request, sender, sendResponse) {
         .then(response => sendResponse({ response }));
       break;
     case 'request:new_bg':
-      newBackground();
+      newBackground()
+        .then(response => preamble.renderer.updateBackground(response));
       break;
     case 'update:setting':
       handleSettingUpdate(request.payload);
@@ -141,12 +146,12 @@ function onMessage(request, sender, sendResponse) {
   return true;
 }
 
-chrome.runtime.onMessage.addListener(onMessage);
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
+browser.runtime.onMessage.addListener(onMessage);
+browser.storage.onChanged.addListener((changes, areaName) => {
   if (areaName !== 'local') return;
   if (Object.hasOwn(changes, 'settings')) {
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       action: 'sync:settings',
       payload: changes.settings.newValue,
     });
