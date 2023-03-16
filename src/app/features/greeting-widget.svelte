@@ -2,7 +2,7 @@
   import { tick } from 'svelte';
 
   import { updateSetting } from '$lib/middleware';
-  import { settings } from 'src/app/stores';
+  import { settings } from '$stores';
 
   let isRenaming = false;
   let elemRef: HTMLElement;

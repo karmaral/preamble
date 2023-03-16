@@ -91,6 +91,7 @@ export interface SettingsDataEntry {
 export interface SettingsData {
   [key: string]: SettingsDataEntry;
 }
+
 export interface SettingChangePayload {
   key: string;
   value: string | number | boolean;

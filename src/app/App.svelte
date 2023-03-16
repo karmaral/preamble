@@ -1,7 +1,7 @@
 <script lang="ts">
   import './app.css';
   import { derived } from 'svelte/store';
-  import { settings, settingsOpen } from 'src/app/stores';
+  import { settings, settingsOpen } from '$stores';
   import Background, { RequestButton, AuthorWidget } from '$features/background';
   import {
     ClockWidget,

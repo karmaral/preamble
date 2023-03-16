@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { SettingsItem, SettingsOption } from 'src/types';
+  import type { SettingsItem, SettingsOption, SettingChangePayload } from '$types';
   import { InputEnum, InputSelect, InputSlider, InputText } from '$features/ui';
-  import { settings } from 'src/app/stores';
+  import { settings } from '$stores';
   import { updateSetting } from '$lib/middleware';
 
 

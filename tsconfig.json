@@ -18,7 +18,7 @@
 			"$features/*": ["src/app/features/*"],
 			"$lib/*": ["src/app/lib/*"],
 			"$types": ["src/types.d.ts"],
-			"$stores": ["src/lib/stores.ts"]
+			"$stores": ["src/app/lib/stores.ts"]
 		}
 	},
 	"include": [

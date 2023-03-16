@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SettingsOption } from "src/types";
+  import type { SettingsOption } from "$types";
 
   export let key = '';
   export let label = '';

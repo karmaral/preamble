@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dailyQuote } from "src/app/stores";
+  import { dailyQuote } from "$stores";
 
   $: loaded = Boolean($dailyQuote);
 

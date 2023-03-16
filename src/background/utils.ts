@@ -10,7 +10,7 @@ const SETTINGS_KEYS: string[] = [
 const QUOTE_RESET_TIME = 4;
 
 const SETTINGS_DEFAULTS = {
-  quote_source: {
+  quotes_source: {
     setting: 'They Said So',
     value: 'https://quotes.rest/qod',
   },

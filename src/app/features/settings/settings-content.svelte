@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade, fly } from 'svelte/transition';
-  import type { SettingsData } from 'src/types';
+  import type { SettingsData } from '$types';
   import _data from './settings-data';
   import SettingsItem from './settings-item.svelte';
 

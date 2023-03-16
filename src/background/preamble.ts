@@ -20,7 +20,7 @@ import type {
   Quote,
   Weather,
   Coordinates,
-} from "src/types";
+} from "$types";
 
 const preamble = {
   weather: {

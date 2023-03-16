@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SettingsOption } from 'src/types';
+  import type { SettingsOption } from '$types';
   import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@rgossiaux/svelte-headlessui';
 
   export let options: SettingsOption[] = [{

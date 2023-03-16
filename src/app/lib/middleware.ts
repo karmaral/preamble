@@ -1,5 +1,5 @@
-import type { InitData } from "src/types";
 import browser from 'webextension-polyfill';
+import type { InitData, SettingChangePayload } from '$types';
 
 export function requestNewBackground() {
   browser.runtime.sendMessage({
