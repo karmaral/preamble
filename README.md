@@ -1,4 +1,4 @@
-# Preamble - A new tab extension for Chrome
+# Preamble - A cross-browser web extension
 An extension for having a pleasant sight-seeing experience before embarking on your browsing journeys.
 
 
@@ -22,4 +22,4 @@ Thanks to the Svelte's Discord user Corrl who shed light on how to graciously en
 
 ------
 
-This extension uses the [Svelte Typescript Chrome Extension Boilerplate](https://github.com/NekitCorp/chrome-extension-svelte-typescript-boilerplate)
+This extension uses the [Vite Plugin Web Extension](https://github.com/aklinker1/vite-plugin-web-extension)
