@@ -42,6 +42,11 @@
         <InputText key={item_key} label={input_label} />
       </div>
     {/if}
+    {#if customActive}
+      <div class="custom">
+        <InputText key={item_key} label={input_label} />
+      </div>
+    {/if}
   </div>
   <div class="item-action">
     {#if input_type === 'enum'}
