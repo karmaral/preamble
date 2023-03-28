@@ -12,12 +12,17 @@
 
 </script>
 
-<RangeSlider
-  springValues={{ stiffness: 1, damping: 1 }}
-  on:change={handleChange}
-/>
+<div class="ui-input-slider">
+  <RangeSlider
+    springValues={{ stiffness: 1, damping: 1 }}
+    on:change={handleChange}
+  />
+</div>
 
 <style>
+  .ui-input-slider {
+    display: flex;
+  }
   :global(.item-action .rangeSlider) {
     margin: 0;
     --slider: rgb(0 0 0 / 40%);

@@ -23,3 +23,9 @@ export async function requestInit(): Promise<BackgroundPhoto> {
 
   return request.response;
 }
+export function updateSetting(payload: { key: string; label: string; value: unknown }) {
+  chrome.runtime.sendMessage({
+    action: 'setting:update',
+    payload,
+  });
+}

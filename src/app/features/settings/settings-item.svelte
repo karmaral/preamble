@@ -1,6 +1,8 @@
 <script lang="ts">
-  import type { SettingsItem } from 'src/types';
-  import { InputEnum, InputSlider } from '$features/ui';
+  import type { SettingsItem, SettingsOption } from 'src/types';
+  import { InputEnum, InputSelect, InputSlider, InputText } from '$features/ui';
+  import { updateSetting } from '$lib/middleware';
+
 
   export let data : SettingsItem;
   let {
@@ -10,6 +12,17 @@
     input_label,
     input_type,
   } = data;
+
+  let customActive = false;
+  let customData;
+
+  function handleSelectChange(opt:SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
 
 </script>
 
@@ -22,17 +35,21 @@
     {#if description}
       <p class="description">{description} </p>
     {/if}
+    {#if customActive}
+      <div class="custom">
+        <InputText key={item_key} label={input_label} />
+      </div>
+    {/if}
   </div>
   <div class="item-action">
     {#if input_type === 'enum'}
-      <InputEnum options={data.enum_options}/>
+      <InputEnum options={data.options}/>
+    {:else if input_type === 'select'}
+      <InputSelect options={data.options} onChange={handleSelectChange} />
     {:else if input_type === 'range'}
       <InputSlider />
     {:else}
-      <label for="{item_key}">
-        {input_label}
-        <input type={input_type} name="{item_key}" id="">
-      </label>
+      <InputText key={item_key} label={input_label} type={input_type} />
     {/if}
   </div>
 </div>
