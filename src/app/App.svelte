@@ -1,12 +1,13 @@
 <script lang="ts">
   import './app.css';
   import { derived } from 'svelte/store';
-  import { settings, settingsOpen } from 'src/app/stores';
+  import { settings, settingsOpen } from '$stores';
   import Background, { RequestButton, AuthorWidget } from '$features/background';
   import {
     ClockWidget,
     QuoteWidget,
     WeatherWidget,
+    GreetingWidget,
     GreetingWidget,
     } from '$features';
   import SettingsModal from '$features/settings';
@@ -14,6 +15,15 @@
   import { Cog6Tooth } from '@steeze-ui/heroicons';
 
   const handleToggleSettings = (toggle : boolean) => $settingsOpen = toggle;
+  const handleFontChange = (newFont: string) => {
+    document.body.style.setProperty('--font_family', newFont);
+  };
+  const globalFont = derived(settings, ($store) => {
+    return $store?.font_family?.value;
+  });
+  $: if ($globalFont) {
+    handleFontChange($globalFont);
+  }
   const handleFontChange = (newFont: string) => {
     document.body.style.setProperty('--font_family', newFont);
   };

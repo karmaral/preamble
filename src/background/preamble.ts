@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import {
   QUOTE_RESET_TIME,
   SETTINGS_DEFAULTS,
@@ -15,10 +16,11 @@ import {
 import type {
   Storage,
   StoredSettings,
+  BackgroundPhoto,
   Quote,
   Weather,
   Coordinates,
-} from "src/types";
+} from "$types";
 
 const preamble = {
   weather: {
@@ -41,7 +43,7 @@ const preamble = {
             return;
           }
           console.log('setting geoloc', initialGeo);
-          await chrome.storage.local.set({
+          await browser.storage.local.set({
             geolocation: initialGeo,
           });
         }
@@ -82,11 +84,11 @@ const preamble = {
       return weather;
     },
     async getCurrent(): Promise<Weather> {
-      const { current_weather } = await chrome.storage.local.get('current_weather') as StoredSettings;
+      const { current_weather } = await browser.storage.local.get('current_weather') as Storage;
       return current_weather;
     },
     async setCurrent(weather: Weather) {
-      await chrome.storage.local.set({ current_weather: weather });
+      await browser.storage.local.set({ current_weather: weather });
     },
     async new() {
       const newWeather = await this.fetch();
@@ -163,15 +165,15 @@ const preamble = {
       this.sync(currentQuote);
     },
     async setCurrent(quote: Quote) {
-      await chrome.storage.local.set({ current_quote: quote });
+      await browser.storage.local.set({ current_quote: quote });
       return;
     },
     async getCurrent(): Promise<Quote> {
-      const { current_quote } = await chrome.storage.local.get('current_quote') as Storage;
+      const { current_quote } = await browser.storage.local.get('current_quote') as Storage;
       return current_quote;
     },
     async getHistory(): Promise<Quote[]> {
-      const { quotes_history } = await chrome.storage.local.get('quotes_history') as Storage;
+      const { quotes_history } = await browser.storage.local.get('quotes_history') as Storage;
       return quotes_history;
     },
     async fetch(): Promise<Quote> {
@@ -197,14 +199,14 @@ const preamble = {
     },
     async new() {
       const newQuote = await this.fetch();
-      const quotesHistory = await this.getHistory();
+      const quotessHistory = await this.getHistory();
 
       const storage: Partial<Storage> = {
         current_quote: newQuote,
-        quotes_history: [...quotesHistory, newQuote],
+        quotess_history: [...quotessHistory, newQuote],
       };
 
-      await chrome.storage.local.set(storage);
+      await browser.storage.local.set(storage);
       await preamble.renderer.updateQuote(newQuote);
     },
     async sync(quote: Quote) {
@@ -229,10 +231,10 @@ const preamble = {
       Object.keys(updateData).forEach((k) => {
         settings[k] = updateData[k];
       });
-      await chrome.storage.local.set({ settings });
+      await browser.storage.local.set({ settings });
     },
     async getAll(): Promise<StoredSettings> {
-      const { settings } = await chrome.storage.local.get('settings');
+      const { settings } = await browser.storage.local.get('settings');
       return settings;
     },
     async getQuoteSource(): Promise<string> {
@@ -248,19 +250,25 @@ const preamble = {
       return weather_unit?.value;
     },
     async getGeolocation(): Promise<Coordinates> {
-      const { geolocation } = await chrome.storage.local.get('geolocation') as Storage;
+      const { geolocation } = await browser.storage.local.get('geolocation') as Storage;
       return geolocation;
     },
   },
   renderer: {
+    updateBackground(photo: BackgroundPhoto) {
+      browser.runtime.sendMessage({
+        action: 'update:bg',
+        payload: photo,
+      });
+    },
     async updateQuote(quote: Quote) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         action: 'update:quote',
         payload: quote,
       });
     },
     async updateWeather(weather: Weather) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         action: 'update:weather',
         payload: weather,
       });

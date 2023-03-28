@@ -58,6 +58,7 @@ export interface Storage {
 export interface StoredSettingVariable {
   setting: string;
   value: string;
+  custom?: boolean;
 }
 
 export interface StoredSettings {
@@ -89,4 +90,11 @@ export interface SettingsDataEntry {
 }
 export interface SettingsData {
   [key: string]: SettingsDataEntry;
+}
+
+export interface SettingChangePayload {
+  key: string;
+  value: string | number | boolean;
+  label: string;
+  custom?: boolean;
 }

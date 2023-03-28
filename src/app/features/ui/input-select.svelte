@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { SettingsOption } from 'src/types';
   import InputText from './input-text.svelte';
+  import type { SettingsOption } from '$types';
   import {
     Listbox,
     ListboxButton,

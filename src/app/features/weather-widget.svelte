@@ -7,7 +7,7 @@
     DayFog, NightFog,
     DayRain, NightAltRain,
   } from 'svelte-weather';
-  import { currentWeather } from 'src/app/stores';
+  import { currentWeather } from '$stores';
   $: loaded = Boolean($currentWeather);
 
   const icons = {

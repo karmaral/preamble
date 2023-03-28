@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { SettingsItem, SettingsOption } from 'src/types';
+  import type { SettingsItem, SettingsOption, SettingChangePayload } from '$types';
   import { InputEnum, InputSelect, InputSlider, InputText } from '$features/ui';
-  import { settings } from 'src/app/stores';
+  import { settings } from '$stores';
   import { updateSetting } from '$lib/middleware';
 
 
@@ -13,6 +13,42 @@
     input_label,
     input_type,
   } = data;
+
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
+
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
+
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
 
   $: currentValue = $settings[item_key]?.value;
   let customActive = false;
@@ -42,15 +78,12 @@
         <InputText key={item_key} label={input_label} />
       </div>
     {/if}
-    {#if customActive}
-      <div class="custom">
-        <InputText key={item_key} label={input_label} />
-      </div>
-    {/if}
   </div>
   <div class="item-action">
     {#if input_type === 'enum'}
       <InputEnum options={data.options}/>
+    {:else if input_type === 'select'}
+      <InputSelect options={data.options} onChange={handleChange} />
     {:else if input_type === 'select'}
       <InputSelect options={data.options} onChange={handleChange} />
     {:else if input_type === 'range'}
@@ -60,6 +93,8 @@
         key={item_key}
         label={input_label}
         value={currentValue}
+        onChange={handleChange}
+      />
         onChange={handleChange}
       />
     {/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { isEmpty } from 'lodash-es';
-  import { photos, isBackgroundChanging } from 'src/app/stores';
+  import { photos, isBackgroundChanging } from '$stores';
   import { ArrowTopRightOnSquare } from '@steeze-ui/heroicons';
   import { Icon } from '@steeze-ui/svelte-icon';
 
