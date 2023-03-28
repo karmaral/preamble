@@ -8,12 +8,22 @@
     QuoteWidget,
     WeatherWidget,
     GreetingWidget,
+    GreetingWidget,
     } from '$features';
   import SettingsModal from '$features/settings';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { Cog6Tooth } from '@steeze-ui/heroicons';
 
   const handleToggleSettings = (toggle : boolean) => $settingsOpen = toggle;
+  const handleFontChange = (newFont: string) => {
+    document.body.style.setProperty('--font_family', newFont);
+  };
+  const globalFont = derived(settings, ($store) => {
+    return $store?.font_family?.value;
+  });
+  $: if ($globalFont) {
+    handleFontChange($globalFont);
+  }
   const handleFontChange = (newFont: string) => {
     document.body.style.setProperty('--font_family', newFont);
   };

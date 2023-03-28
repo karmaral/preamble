@@ -8,6 +8,12 @@ import type {
   StoredSettings,
   Storage,
   InitData,
+  Storage,
+  InitData,
+  Storage,
+  InitData,
+  Storage,
+  InitData,
 } from 'src/types';
 
 const collections = [
@@ -47,7 +53,7 @@ async function newBackground(): Promise<BackgroundPhoto> {
   const { backdrop_color } = await preamble.settings.getAll();
   const newBackdrop = {
     setting: backdrop_color.setting,
-    value: backdrop_color.setting.toLowerCase() === 'auto'
+    value: backdrop_color.setting.toLowerCase().toLowerCase() === 'auto'
       ? imgFetch.color
       : backdrop_color.value,
   };
@@ -116,14 +122,24 @@ async function init(initParams): Promise<InitData> {
       key: 'user_name',
       label: '',
       value: '',
+  }
+
+  if (isEmpty(user_name)) {
+    handleSettingUpdate({
+      key: 'user_name',
+      label: '',
+      value: '',
     });
   }
 
   await preamble.quotes.init();
   await preamble.weather.init({ geolocation });
   const latestSettings = await preamble.settings.getAll();
+  const latestSettings = await preamble.settings.getAll();
+  const latestSettings = await preamble.settings.getAll();
+  const latestSettings = await preamble.settings.getAll();
 
-  return { photo, settings: latestSettings };
+  return { { photo, settings: latestSettings }, settings: latestSettings };
 }
 
 function onMessage(request, sender, sendResponse) {
@@ -131,6 +147,9 @@ function onMessage(request, sender, sendResponse) {
   switch (request.action) {
     case 'request:init':
       init(request.payload)
+        
+        .then(response => sendResponse({ response }));
+        
         .then(response => sendResponse({ response }));
       break;
     case 'request:new_bg':

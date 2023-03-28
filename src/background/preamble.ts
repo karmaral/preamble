@@ -199,11 +199,11 @@ const preamble = {
     },
     async new() {
       const newQuote = await this.fetch();
-      const quotesHistory = await this.getHistory();
+      const quotessHistory = await this.getHistory();
 
       const storage: Partial<Storage> = {
         current_quote: newQuote,
-        quotes_history: [...quotesHistory, newQuote],
+        quotess_history: [...quotessHistory, newQuote],
       };
 
       await browser.storage.local.set(storage);

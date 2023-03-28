@@ -26,6 +26,42 @@
     customActive = opt.custom;
   }
 
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
+
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
+
+  $: currentValue = $settings[item_key]?.value;
+  let customActive = false;
+  let customData;
+
+  function handleChange(opt: SettingsOption) {
+    const { value, label } = opt;
+    const payload = { key: item_key, value, label }
+    updateSetting(payload);
+    console.log(payload);
+    customActive = opt.custom;
+  }
+
 </script>
 
 <div
@@ -48,6 +84,8 @@
       <InputEnum options={data.options}/>
     {:else if input_type === 'select'}
       <InputSelect options={data.options} onChange={handleChange} />
+    {:else if input_type === 'select'}
+      <InputSelect options={data.options} onChange={handleChange} />
     {:else if input_type === 'range'}
       <InputSlider />
     {:else}
@@ -55,6 +93,8 @@
         key={item_key}
         label={input_label}
         value={currentValue}
+        onChange={handleChange}
+      />
         onChange={handleChange}
       />
     {/if}
