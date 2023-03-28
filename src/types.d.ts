@@ -1,7 +1,7 @@
-export interface IStorage {
-    count: number;
-}
-
+export interface InitData {
+  photo: BackgroundPhoto;
+  settings: StoredSettings
+};
 
 export interface UnsplashPhoto {
 	id: number;
@@ -45,24 +45,28 @@ export interface Coordinates {
   longitude: number;
 }
 
+export interface Storage {
+  settings: Partial<StoredSettings>;
+  current_quote: Quote;
+  quotes_history: Quote[];
+  current_weather: Weather;
+  geolocation: Coordinates;
+  last_changed: string;
+  current_bg: BackgroundPhoto;
+}
+
 export interface StoredSettingVariable {
   setting: string;
   value: string;
 }
 
 export interface StoredSettings {
-  current_bg?: BackgroundPhoto;
-  last_changed?: string;
-  user_name?: string;
-  backdrop_color?: StoredSettingVariable;
-  current_quote?: Quote;
-  quote_history?: Quote[];
-  quote_source?: StoredSettingVariable;
-  current_weather?: Weather;
-  weather_source?: StoredSettingVariable;
-  weather_unit?: StoredSettingVariable;
-  geolocation?: Coordinates;
-  font_family?: StoredSettingVariable;
+  user_name: StoredSettingsVariable;
+  backdrop_color: StoredSettingVariable;
+  quotes_source: StoredSettingVariable;
+  weather_source: StoredSettingVariable;
+  weather_unit: StoredSettingVariable;
+  font_family: StoredSettingVariable;
 }
 
 export interface SettingsOption {

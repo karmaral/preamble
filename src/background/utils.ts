@@ -4,8 +4,8 @@ const SETTINGS_KEYS: string[] = [
   'user_name',
   'backdrop_color',
   'current_quote',
-  'quote_history',
-  'quote_source',
+  'quotes_history',
+  'quotes_source',
 ];
 const QUOTE_RESET_TIME = 4;
 
@@ -17,6 +17,10 @@ const SETTINGS_DEFAULTS = {
   weather_source: {
     setting: 'Open Meteo',
     value: 'https://api.open-meteo.com/v1/forecast',
+  },
+  user_name: {
+    setting: '',
+    value: '',
   },
 };
 
