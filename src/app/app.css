@@ -1,6 +1,7 @@
 :root {
   --font_family: 'Avenir', system-ui;
   --border-radius-s: .2rem;
+  --border-radius-l: 1rem;
   --focus-overlay-background: hsl(0 0% 0% / 15%);
 }
 
@@ -13,6 +14,7 @@ html { font-size: 1.5vmin; }
 body {
   font-family: var(--font_family), system-ui, sans-serif;
   font-size: 100%;
+  font-weight: 300;
   user-select: none;
   text-shadow: 0 1px .21em rgb(0 0 0 / 35%);
 }

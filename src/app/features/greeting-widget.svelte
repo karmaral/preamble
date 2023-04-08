@@ -1,11 +1,14 @@
 <script lang="ts">
   import { tick } from 'svelte';
-
+  import { fade } from 'svelte/transition';
   import { updateSetting } from '$lib/middleware';
   import { settings } from '$stores';
+  import { ModalBackdrop } from '$features/ui';
 
   let isRenaming = false;
   let elemRef: HTMLElement;
+
+  let rootElem: HTMLDivElement;
 
   let renameAction = updateSetting;
 
@@ -21,6 +24,7 @@
   async function handleRename(e: MouseEvent): Promise<void> {
     e.preventDefault();
     isRenaming = true;
+    rootElem.style.zIndex = '100';
     await tick();
     elemRef.focus();
   }
@@ -36,41 +40,53 @@
       value: elemRef.innerText,
     };
     renameAction(payload);
+
+    setTimeout(() => rootElem.style.zIndex = null, 300);
   }
 </script>
 
-<div class="greeting">
+<div class="greeting" bind:this={rootElem}>
+  {#if isRenaming}
+    <ModalBackdrop />
+  {/if}
   {#if nameLoaded}
-    Hello,
-    <span
-      class:active={isRenaming}
-      contenteditable={isRenaming}
-      on:click={handleRename}
-      on:blur={handleSubmit}
-      on:keydown={handleKeys}
-      bind:this={elemRef}
+    <div class="greeting-text"
+      transition:fade={{ duration: 400 }}
     >
-      {name}
-    </span>
+      Hello,
+      <span
+        class:active={isRenaming}
+        contenteditable={isRenaming}
+        on:click={handleRename}
+        on:blur={handleSubmit}
+        on:keydown={handleKeys}
+        bind:this={elemRef}
+      >
+        {name}
+      </span>
+    </div>
   {/if}
 </div>
 
 <style>
   .greeting {
+    position: relative;
+  }
+  .greeting-text {
     font-size: 4rem;
     font-weight: 300;
     line-height: 1;
   }
-  .greeting > span {
+  .greeting-text > span {
     display: inline-flex;
     position: relative;
     z-index: 1;
     user-select: text;
   }
-  .greeting > span:focus-visible {
+  .greeting-text > span:focus-visible {
     outline: none;
   }
-  .greeting > span::before {
+  .greeting-text > span::before {
     content: "";
     width: calc(100% + .3em);
     height: calc(100% + .3em);
@@ -87,9 +103,13 @@
     box-shadow: 0 0 1.2em hsl(0 0% 0% / 45%);
     z-index: -1;
   }
-  .greeting > span.active::before {
+  .greeting-text > span.active::before {
     visibility: visible;
     opacity: 1;
     transition-delay: 0s;
+  }
+  .greeting-text > span.active::after {
+    content: ".";
+    position: absolute;
   }
 </style>
