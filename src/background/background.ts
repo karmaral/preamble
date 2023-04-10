@@ -6,12 +6,8 @@ import type { Random } from 'unsplash-js/dist/methods/photos/types';
 import type {
   BackgroundPhoto,
   StoredSettings,
-  Storage,
-  InitData,
-  Storage,
-  InitData,
-  Storage,
-  InitData,
+  SettingChangePayload,
+  Message,
   Storage,
   InitData,
 } from 'src/types';
@@ -53,7 +49,7 @@ async function newBackground(): Promise<BackgroundPhoto> {
   const { backdrop_color } = await preamble.settings.getAll();
   const newBackdrop = {
     setting: backdrop_color.setting,
-    value: backdrop_color.setting.toLowerCase().toLowerCase() === 'auto'
+    value: backdrop_color.setting.toLowerCase() === 'auto'
       ? imgFetch.color
       : backdrop_color.value,
   };
@@ -67,14 +63,6 @@ async function newBackground(): Promise<BackgroundPhoto> {
   await preamble.settings.set({ backdrop_color: newBackdrop });
 
   return photo;
-}
-
-
-async function sendUpdatedBackground(photo: BackgroundPhoto) {
-  chrome.runtime.sendMessage({
-    action: 'update:bg',
-    payload: photo,
-  });
 }
 
 function handleSettingUpdate(payload: SettingChangePayload) {
@@ -122,34 +110,24 @@ async function init(initParams): Promise<InitData> {
       key: 'user_name',
       label: '',
       value: '',
-  }
-
-  if (isEmpty(user_name)) {
-    handleSettingUpdate({
-      key: 'user_name',
-      label: '',
-      value: '',
     });
   }
 
   await preamble.quotes.init();
   await preamble.weather.init({ geolocation });
   const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
 
-  return { { photo, settings: latestSettings }, settings: latestSettings };
+  return { photo, settings: latestSettings };
 }
 
-function onMessage(request, sender, sendResponse) {
-  console.log(`bg >> onMessage: ${request.action}`);
-  switch (request.action) {
+function onMessage(
+  message: Message,
+  _sender: browser.Runtime.MessageSender,
+  sendResponse: (params: unknown) => void) {
+  console.log(`bg >> onMessage: ${message.action}`);
+  switch (message.action) {
     case 'request:init':
-      init(request.payload)
-        
-        .then(response => sendResponse({ response }));
-        
+      init(message.payload)
         .then(response => sendResponse({ response }));
       break;
     case 'request:new_bg':
@@ -157,7 +135,7 @@ function onMessage(request, sender, sendResponse) {
         .then(response => preamble.renderer.updateBackground(response));
       break;
     case 'update:setting':
-      handleSettingUpdate(request.payload);
+      handleSettingUpdate(message.payload as SettingChangePayload);
       break;
     default: break;
   }

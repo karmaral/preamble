@@ -98,3 +98,9 @@ export interface SettingChangePayload {
   label: string;
   custom?: boolean;
 }
+
+export interface Message {
+  action: string;
+  payload: unknown;
+  [key: string]: unknown;
+}
