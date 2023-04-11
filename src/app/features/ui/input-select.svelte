@@ -1,6 +1,5 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import InputText from './input-text.svelte';
   import type { SettingsOption } from '$types';
   import {
     Listbox,
@@ -8,6 +7,11 @@
     ListboxOptions,
     ListboxOption,
   } from "@rgossiaux/svelte-headlessui";
+  import { Svroller } from 'svrollbar';
+  import { Icon } from '@steeze-ui/svelte-icon';
+  import { ChevronDown } from '@steeze-ui/heroicons';
+  import { cls } from '$lib/utils';
+
 
   export let options: SettingsOption[] = [
     {
@@ -27,6 +31,11 @@
     onChange(selectedOption);
   }
 
+  function classNames({ active, selected }) {
+    const obj = { 'option': true, active, selected };
+    return cls(obj);
+  }
+
 </script>
 
 <div class="ui-input-select">
@@ -35,22 +44,21 @@
     on:change={handleChange}
   >
     <ListboxButton class="option-button">
-      {selectedOption.label}
+      {selectedOption?.label}
+      <Icon src={ChevronDown} size="1em" stroke-width="1" />
     </ListboxButton>
     <ListboxOptions class="option-list">
-      {#each options as option (option.value)}
-        {@const value = `${option.value}`}
-        <ListboxOption
-          {value}
-          class={({ active, selected }) => {
-            const act = active ? 'active' : '';
-            const sel = selected ? 'selected' : '';
-            return ['option', act, sel].join(' ');
-          }}
-        >
-          {option.label}
-        </ListboxOption>
-      {/each}
+      <Svroller>
+        {#each options as option (option.value)}
+          {@const value = `${option.value}`}
+          <ListboxOption
+            {value}
+            class={classNames}
+          >
+            {option.label}
+          </ListboxOption>
+        {/each}
+      </Svroller>
     </ListboxOptions>
   </Listbox>
 </div>
@@ -74,6 +82,9 @@
     text-align: left;
     width: -webkit-fill-available;
     width: fill-available;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   :global(.ui-input-select .option-list) {
     list-style: none;
@@ -81,6 +92,7 @@
     padding-inline: 0;
     overflow: hidden;
     width: 100%;
+    height: 10rem;
     background-color: rgb(0 0 0 / .2);
     border-radius: var(--border-radius-s);
     border: 1px solid rgb(255 255 255 / .08);
