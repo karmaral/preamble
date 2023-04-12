@@ -12,12 +12,14 @@
 {#if loaded}
 
   <div class="author-widget" class:hide={$isBackgroundChanging}>
-    <a href={data.url} alt="unsplash image link" target="_blank" >
+    <a href={data.url} target="_blank" >
       <div class="content">
         <div class="location">{data.location}</div>
         <div class="author-name">
           {data.user_name}
-          <Icon src={ArrowTopRightOnSquare} size={"1em"} />
+          {#if data.url}
+            <Icon src={ArrowTopRightOnSquare} size={"1em"} />
+          {/if}
         </div>
       </div>
     </a>
@@ -58,6 +60,7 @@
     margin-top: .2rem;
     opacity: 0;
     position: absolute;
+    width: max-content;
     transform: translateY(100%);
     transition: all .5s;
     display: flex;

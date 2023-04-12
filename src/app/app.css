@@ -1,4 +1,5 @@
 :root {
+  --backdrop_color: #2a2630;
   --font_family: 'Avenir', system-ui;
   --border-radius-s: .2rem;
   --border-radius-l: 1rem;

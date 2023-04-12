@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill';
 import {
   QUOTE_RESET_TIME,
   SETTINGS_DEFAULTS,
+  SETTINGS_INIT_DATA,
 } from './utils';
 import {
   isEmpty,
@@ -226,8 +227,14 @@ const preamble = {
     },
   },
   settings: {
-    async set(updateData: Record<string, unknown>): Promise<void> {
+    async init() {
       const settings = await preamble.settings.getAll();
+      if (isEmpty(settings)) {
+        await preamble.settings.set(SETTINGS_INIT_DATA);
+      }
+    },
+    async set(updateData: Record<string, unknown>): Promise<void> {
+      const settings = await preamble.settings.getAll() ?? {};
       Object.keys(updateData).forEach((k) => {
         settings[k] = updateData[k];
       });

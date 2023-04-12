@@ -11,6 +11,7 @@ import type {
   Storage,
   InitData,
 } from 'src/types';
+import { BACKGROUND_FALLBACK } from './utils';
 
 const collections = [
   '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */
@@ -33,16 +34,21 @@ async function fetchRandomImage(): Promise<Random> {
 
 async function newBackground(): Promise<BackgroundPhoto> {
   const imgFetch = await fetchRandomImage();
+  let photo: BackgroundPhoto;
 
-  const photo: BackgroundPhoto = {
-    id: imgFetch.id,
-    src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
-    url: imgFetch.links.html,
-    user_name: imgFetch.user.name,
-    alt_description: imgFetch.alt_description,
-    location: imgFetch.location.name || 'Unknown',
-    img_color: imgFetch.color,
-  };
+   if (imgFetch) {
+    photo = {
+      id: imgFetch.id,
+      src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
+      url: imgFetch.links.html,
+      user_name: imgFetch.user.name,
+      alt_description: imgFetch.alt_description,
+      location: imgFetch.location.name || 'Unknown',
+      img_color: imgFetch.color,
+    };
+  } else {
+    photo = BACKGROUND_FALLBACK;
+  }
 
   const last_changed = Date().toString();
 
@@ -50,7 +56,7 @@ async function newBackground(): Promise<BackgroundPhoto> {
   const newBackdrop = {
     setting: backdrop_color.setting,
     value: backdrop_color.setting.toLowerCase() === 'auto'
-      ? imgFetch.color
+      ? photo.img_color
       : backdrop_color.value,
   };
 
@@ -84,7 +90,6 @@ async function init(initParams): Promise<InitData> {
   ]) as Partial<Storage>;
 
   const { current_bg, last_changed, settings } = storage;
-  const { backdrop_color, user_name } = settings;
 
   let photo: BackgroundPhoto;
 
@@ -93,11 +98,14 @@ async function init(initParams): Promise<InitData> {
     await browser.storage.local.set({ last_changed: date });
   }
 
+  if (isEmpty(settings)) {
+    await preamble.settings.init();
+  }
   photo = isEmpty(current_bg)
     ? await newBackground()
     : current_bg;
 
-  if (isEmpty(backdrop_color) ) {
+  if (isEmpty(settings?.backdrop_color) ) {
     handleSettingUpdate({
       key: 'backdrop_color',
       label: 'auto',
@@ -105,13 +113,6 @@ async function init(initParams): Promise<InitData> {
     });
   }
 
-  if (isEmpty(user_name)) {
-    handleSettingUpdate({
-      key: 'user_name',
-      label: '',
-      value: '',
-    });
-  }
 
   await preamble.quotes.init();
   await preamble.weather.init({ geolocation });
