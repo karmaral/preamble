@@ -5,6 +5,7 @@
     DialogOverlay,
     DialogTitle,
   } from "@rgossiaux/svelte-headlessui";
+  import { ModalBackdrop } from '$features/ui';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { XMark } from '@steeze-ui/heroicons';
   import SettingsContent from './settings-content.svelte';
@@ -20,9 +21,9 @@
     class="modal"
     static
   >
-    <div transition:fade={{duration: 300}}>
-      <DialogOverlay class="modal-backdrop"/>
-    </div>
+    <ModalBackdrop>
+      <DialogOverlay />
+    </ModalBackdrop>
     <div class="modal-container">
         <div class="panel"
           in:fly={{ y: 25, duration: 400}}
@@ -44,14 +45,6 @@
   :global(.modal) {
     position: relative;
       z-index: 50;
-  }
-  :global(.modal-backdrop) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--focus-overlay-background);
   }
   .modal-container {
     position: fixed;

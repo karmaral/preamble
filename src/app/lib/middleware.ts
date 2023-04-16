@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 import type { InitData, SettingChangePayload } from '$types';
+import { isError } from 'lodash-es';
 
 export function requestNewBackground() {
   browser.runtime.sendMessage({

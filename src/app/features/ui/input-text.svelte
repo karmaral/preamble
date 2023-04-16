@@ -6,16 +6,33 @@
   export let value = '';
 
   export let onChange: (opt: SettingsOption) => void;
-  function handleSubmit(e) {
-    const opt = { value: e.target.value, label };
+
+  let elemRef: HTMLInputElement;
+
+  function handleSubmit() {
+    const opt = { value: elemRef.value, label };
     onChange(opt);
+  }
+
+  function handleKeys(e: KeyboardEvent) {
+    if (['Enter', 'Escape'].includes(e.key)){
+      elemRef.blur();
+    }
   }
 </script>
 
 <div class="ui-input-text">
   <label for="{key}">
     {label}
-    <input type="text" name="{key}" id="" {value} on:blur={handleSubmit}>
+    <input
+      type="text"
+      name="{key}"
+      id=""
+      {value}
+      bind:this={elemRef}
+      on:keydown={handleKeys}
+      on:blur={handleSubmit}
+    >
   </label>
 </div>
 

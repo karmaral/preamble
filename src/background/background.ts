@@ -6,15 +6,12 @@ import type { Random } from 'unsplash-js/dist/methods/photos/types';
 import type {
   BackgroundPhoto,
   StoredSettings,
-  Storage,
-  InitData,
-  Storage,
-  InitData,
-  Storage,
-  InitData,
+  SettingChangePayload,
+  Message,
   Storage,
   InitData,
 } from 'src/types';
+import { BACKGROUND_FALLBACK } from './utils';
 
 const collections = [
   '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */
@@ -37,24 +34,29 @@ async function fetchRandomImage(): Promise<Random> {
 
 async function newBackground(): Promise<BackgroundPhoto> {
   const imgFetch = await fetchRandomImage();
+  let photo: BackgroundPhoto;
 
-  const photo: BackgroundPhoto = {
-    id: imgFetch.id,
-    src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
-    url: imgFetch.links.html,
-    user_name: imgFetch.user.name,
-    alt_description: imgFetch.alt_description,
-    location: imgFetch.location.name || 'Unknown',
-    img_color: imgFetch.color,
-  };
+   if (imgFetch) {
+    photo = {
+      id: imgFetch.id,
+      src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
+      url: imgFetch.links.html,
+      user_name: imgFetch.user.name,
+      alt_description: imgFetch.alt_description,
+      location: imgFetch.location.name || 'Unknown',
+      img_color: imgFetch.color,
+    };
+  } else {
+    photo = BACKGROUND_FALLBACK;
+  }
 
   const last_changed = Date().toString();
 
   const { backdrop_color } = await preamble.settings.getAll();
   const newBackdrop = {
     setting: backdrop_color.setting,
-    value: backdrop_color.setting.toLowerCase().toLowerCase() === 'auto'
-      ? imgFetch.color
+    value: backdrop_color.setting.toLowerCase() === 'auto'
+      ? photo.img_color
       : backdrop_color.value,
   };
 
@@ -69,19 +71,11 @@ async function newBackground(): Promise<BackgroundPhoto> {
   return photo;
 }
 
-
-async function sendUpdatedBackground(photo: BackgroundPhoto) {
-  chrome.runtime.sendMessage({
-    action: 'update:bg',
-    payload: photo,
-  });
-}
-
 function handleSettingUpdate(payload: SettingChangePayload) {
   const { key, label, value } = payload;
   const updateData: Record<string, unknown> = { setting: label, value };
-  if (payload.custom) {
-    updateData.custom = true;
+  if (payload.custom_value) {
+    updateData.custom_value = payload.custom_value;
   }
   preamble.settings.set({ [key]: updateData });
 }
@@ -96,7 +90,6 @@ async function init(initParams): Promise<InitData> {
   ]) as Partial<Storage>;
 
   const { current_bg, last_changed, settings } = storage;
-  const { backdrop_color, user_name } = settings;
 
   let photo: BackgroundPhoto;
 
@@ -105,11 +98,14 @@ async function init(initParams): Promise<InitData> {
     await browser.storage.local.set({ last_changed: date });
   }
 
+  if (isEmpty(settings)) {
+    await preamble.settings.init();
+  }
   photo = isEmpty(current_bg)
     ? await newBackground()
     : current_bg;
 
-  if (isEmpty(backdrop_color) ) {
+  if (isEmpty(settings?.backdrop_color) ) {
     handleSettingUpdate({
       key: 'backdrop_color',
       label: 'auto',
@@ -117,52 +113,35 @@ async function init(initParams): Promise<InitData> {
     });
   }
 
-  if (isEmpty(user_name)) {
-    handleSettingUpdate({
-      key: 'user_name',
-      label: '',
-      value: '',
-  }
-
-  if (isEmpty(user_name)) {
-    handleSettingUpdate({
-      key: 'user_name',
-      label: '',
-      value: '',
-    });
-  }
 
   await preamble.quotes.init();
   await preamble.weather.init({ geolocation });
   const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
-  const latestSettings = await preamble.settings.getAll();
 
-  return { { photo, settings: latestSettings }, settings: latestSettings };
+  return { photo, settings: latestSettings };
 }
 
-function onMessage(request, sender, sendResponse) {
-  console.log(`bg >> onMessage: ${request.action}`);
-  switch (request.action) {
+async function onMessage(
+  message: Message,
+  _sender: browser.Runtime.MessageSender,
+  _sendResponse: (params: unknown) => void) {
+  console.log(`bg >> onMessage: ${message.action}`);
+  let response: unknown;
+  switch (message.action) {
     case 'request:init':
-      init(request.payload)
-        
-        .then(response => sendResponse({ response }));
-        
-        .then(response => sendResponse({ response }));
+      response = await init(message.payload)
       break;
     case 'request:new_bg':
-      newBackground()
-        .then(response => preamble.renderer.updateBackground(response));
+      let bg = await newBackground();
+      preamble.renderer.updateBackground(bg);
       break;
     case 'update:setting':
-      handleSettingUpdate(request.payload);
+      handleSettingUpdate(message.payload as SettingChangePayload);
       break;
     default: break;
   }
 
-  return true;
+  return { response };
 }
 
 

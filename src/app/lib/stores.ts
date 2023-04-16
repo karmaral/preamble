@@ -46,22 +46,4 @@ function onMessage(request: Record<string, unknown>) {
 }
 
 browser.runtime.onMessage.addListener(onMessage);
-
-// let aa;
-// function succ(pos) {
-//   const crd = pos.coords;
-//   aa = crd;
-//   console.log('aaa', aa?.latitude);
-// }
-// function er(err) {
-//   console.warn(`ERROR(${err.code}): ${err.message}`);
-// }
-// navigator.geolocation.getCurrentPosition(succ, er, { timeout: 5000 });
-// console.log(aa);
-// setTimeout(() => console.log(aa), 5000);
-
-// navigator.geolocation.getCurrentPosition(
-//   (position) => { const c = position.coords; console.log(c); initStores(c); },
-//   (positionErr) => { initStores(positionErr); },
-// );
 initStores();
