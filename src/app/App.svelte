@@ -19,7 +19,10 @@
     document.body.style.setProperty('--font_family', newFont);
   };
   const globalFont = derived(settings, ($store) => {
-    return $store?.font_family?.value;
+    if (!$store || !$store?.font_family) return;
+    const { font_family } = $store;
+    const { value, custom_value } = font_family;
+    return custom_value || value;
   });
 
   $: if ($globalFont) {
