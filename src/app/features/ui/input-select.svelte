@@ -12,7 +12,6 @@
   import { ChevronDown } from '@steeze-ui/heroicons';
   import { cls } from '$lib/utils';
 
-
   export let options: SettingsOption[] = [
     {
       label: 'Default',
@@ -20,15 +19,17 @@
     },
   ];
 
-  let currentValue = options[0].value;
+  export let currentValue = options[0].value;
+
   $: selectedOption = options.find((o) => o.value === currentValue);
 
-  export let onChange: (opt: SettingsOption) => void;
+  export let onChange: (opt: SettingsOption, custom: boolean) => void;
 
   async function handleChange(e: CustomEvent) {
     currentValue = e.detail;
     await tick();
-    onChange(selectedOption);
+    const custom = currentValue === 'custom';
+    onChange(selectedOption, custom);
   }
 
   function classNames({ active, selected }) {

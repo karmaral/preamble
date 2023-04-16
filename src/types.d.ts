@@ -56,9 +56,9 @@ export interface Storage {
 }
 
 export interface StoredSettingVariable {
-  setting: string;
+  setting?: string;
   value: string;
-  custom?: boolean;
+  custom_value?: string;
 }
 
 export interface StoredSettings {
@@ -96,7 +96,7 @@ export interface SettingChangePayload {
   key: string;
   value: string | number | boolean;
   label: string;
-  custom?: boolean;
+  custom_value?: string | number | boolean;
 }
 
 export interface Message {

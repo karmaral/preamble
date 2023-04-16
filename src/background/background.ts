@@ -74,8 +74,8 @@ async function newBackground(): Promise<BackgroundPhoto> {
 function handleSettingUpdate(payload: SettingChangePayload) {
   const { key, label, value } = payload;
   const updateData: Record<string, unknown> = { setting: label, value };
-  if (payload.custom) {
-    updateData.custom = true;
+  if (payload.custom_value) {
+    updateData.custom_value = payload.custom_value;
   }
   preamble.settings.set({ [key]: updateData });
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { SettingsItem, SettingsOption, SettingChangePayload } from '$types';
   import { InputEnum, InputSelect, InputSlider, InputText } from '$features/ui';
   import { settings } from '$stores';
@@ -13,17 +14,35 @@
     input_type,
   } = data;
 
-  $: currentValue = $settings[item_key]?.value;
-  let customActive = false;
-  let customData;
+  $: currentStoredSetting = $settings[item_key];
+  $: currentValue = currentStoredSetting?.value;
+  $: customActive = currentValue === 'custom';
+
+  let customValue: string | number | boolean;
+
+  function handleCustomChange(opt: SettingsOption) {
+    customValue = opt.value;
+    const payload: SettingChangePayload = {
+      key: item_key,
+      value: 'custom',
+      label: input_label,
+      custom_value: opt.value,
+    };
+    updateSetting(payload);
+  }
 
   function handleChange(opt: SettingsOption) {
     const { value, label } = opt;
-    const payload = { key: item_key, value, label }
+    const payload: SettingChangePayload = { key: item_key, value, label };
+
     updateSetting(payload);
-    console.log(payload);
-    customActive = opt.custom;
   }
+
+  onMount(() => {
+    if (currentStoredSetting?.custom_value) {
+      customValue = currentStoredSetting.custom_value;
+    }
+  });
 
 </script>
 
@@ -38,7 +57,12 @@
     {/if}
     {#if customActive}
       <div class="custom">
-        <InputText key={item_key} label={input_label} onChange={handleChange} />
+        <InputText
+          key={item_key}
+          label={input_label}
+          value={String(customValue)}
+          onChange={handleCustomChange}
+        />
       </div>
     {/if}
   </div>
@@ -46,7 +70,11 @@
     {#if input_type === 'enum'}
       <InputEnum options={data.options}/>
     {:else if input_type === 'select'}
-      <InputSelect options={data.options} onChange={handleChange} />
+      <InputSelect
+        options={data.options}
+        currentValue={currentValue}
+        onChange={handleChange}
+      />
     {:else if input_type === 'range'}
       <InputSlider />
     {:else}
