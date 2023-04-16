@@ -121,19 +121,19 @@ async function init(initParams): Promise<InitData> {
   return { photo, settings: latestSettings };
 }
 
-function onMessage(
+async function onMessage(
   message: Message,
   _sender: browser.Runtime.MessageSender,
-  sendResponse: (params: unknown) => void) {
+  _sendResponse: (params: unknown) => void) {
   console.log(`bg >> onMessage: ${message.action}`);
+  let response: unknown;
   switch (message.action) {
     case 'request:init':
-      init(message.payload)
-        .then(response => sendResponse({ response }));
+      response = await init(message.payload)
       break;
     case 'request:new_bg':
-      newBackground()
-        .then(response => preamble.renderer.updateBackground(response));
+      let bg = await newBackground();
+      preamble.renderer.updateBackground(bg);
       break;
     case 'update:setting':
       handleSettingUpdate(message.payload as SettingChangePayload);
@@ -141,7 +141,7 @@ function onMessage(
     default: break;
   }
 
-  return true;
+  return { response };
 }
 
 
