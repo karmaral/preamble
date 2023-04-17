@@ -1,15 +1,7 @@
 export default {
   image_fetching : {
-    label: 'Data Fetching',
+    label: 'Data Sources',
     settings: [
-      {
-        item_key: 'unsplash_public_key',
-        title: 'Unsplash API',
-        description: 'Currently this app leverages the developer API from Unsplash.\n You will have to create an account and use its key in order for the app to work properly.',
-        input_type: 'text',
-        input_label: 'Access Key',
-        direction: 'vertical',
-      },
       {
         item_key: 'quotes_source',
         title: 'Quotes',
@@ -25,18 +17,6 @@ export default {
   interface : {
     label: 'Interface',
     settings: [
-      {
-        item_key: 'backdrop_color',
-        title: 'Backdrop Color',
-        description: 'Force the backdrop color or let Preamble decide using the time of day.',
-        input_type: 'enum',
-        options: [
-          { label: 'Auto', value: 'auto' },
-          { label: 'Black', value: 'black' },
-          { label: 'White', value: 'white' },
-        ],
-        input_label: 'Black | White | Auto',
-      },
       {
         item_key: 'font_family',
         title: 'Font Family',
