@@ -23,6 +23,7 @@ export interface BackgroundPhoto {
   alt_description: string;
   location: string;
   img_color: string;
+  date: string;
 }
 
 export interface Quote {
@@ -51,8 +52,8 @@ export interface Storage {
   quotes_history: Quote[];
   current_weather: Weather;
   geolocation: Coordinates;
-  last_changed: string;
   current_bg: BackgroundPhoto;
+  bg_history: BackgroundPhoto[];
 }
 
 export interface StoredSettingVariable {

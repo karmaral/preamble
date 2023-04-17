@@ -3,7 +3,6 @@ import preamble from './preamble';
 import { isArray, isEmpty } from 'lodash-es';
 import type {
   BackgroundPhoto,
-  StoredSettings,
   SettingChangePayload,
   Message,
   Storage,
@@ -23,42 +22,17 @@ function handleSettingUpdate(payload: SettingChangePayload) {
 async function init(initParams): Promise<InitData> {
   console.log('init', initParams);
   const { geolocation } = initParams;
-  const storage = await browser.storage.local.get([
-    'current_bg',
-    'last_changed',
-    'settings',
-  ]) as Partial<Storage>;
 
-  const { current_bg, last_changed, settings } = storage;
-
-  let photo: BackgroundPhoto;
-
-  if (isEmpty(last_changed)) {
-    const date = new Date().toString();
-    await browser.storage.local.set({ last_changed: date });
-  }
-
-  if (isEmpty(settings)) {
-    await preamble.settings.init();
-  }
-  photo = isEmpty(current_bg)
-    ? await preamble.background.new()
-    : current_bg;
-
-  if (isEmpty(settings?.backdrop_color) ) {
-    handleSettingUpdate({
-      key: 'backdrop_color',
-      label: 'auto',
-      value: photo.img_color,
-    });
-  }
+  await preamble.settings.init();
+  await preamble.background.init();
+  const photo = await preamble.background.getCurrent();
 
 
   await preamble.quotes.init();
   await preamble.weather.init({ geolocation });
-  const latestSettings = await preamble.settings.getAll();
+  const settings = await preamble.settings.getAll();
 
-  return { photo, settings: latestSettings };
+  return { photo, settings };
 }
 
 async function onMessage(

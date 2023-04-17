@@ -15,7 +15,7 @@ import {
   addHours,
   isAfter,
 } from 'date-fns';
-import type { Random } from 'unsplash-js/dist/methods/photos/types';
+import type { Random as RandomImage } from 'unsplash-js/dist/methods/photos/types';
 import type {
   Storage,
   StoredSettings,
@@ -27,17 +27,31 @@ import type {
 
 const preamble = {
   background: {
-    async fetchRandomImage(): Promise<Random> {
+    async init() {
+      const current = await this.getCurrent();
+      const history = await this.getHistory();
+
+      if (isEmpty(history)) {
+        await browser.storage.local.set({ bg_history: [] });
+      }
+
+      if (isEmpty(current)) {
+        await preamble.background.new();
+      }
+    },
+    async fetch(): Promise<RandomImage> {
       const url = 'https://preamble-server.vercel.app/api/background';
       const res = await fetch(url);
       const result = await res.json();
       return result;
     },
     async new(): Promise<BackgroundPhoto> {
-      const imgFetch = await preamble.background.fetchRandomImage();
+      const bgHistory = await this.getHistory();
+      const imgFetch = await preamble.background.fetch();
       let photo: BackgroundPhoto;
 
-       if (imgFetch) {
+      const last_changed = Date().toString();
+      if (imgFetch) {
         photo = {
           id: imgFetch.id,
           src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
@@ -46,24 +60,18 @@ const preamble = {
           alt_description: imgFetch.alt_description,
           location: imgFetch.location.name || 'Unknown',
           img_color: imgFetch.color,
+          date: last_changed,
         };
       } else {
         photo = BACKGROUND_FALLBACK;
       }
 
-      const last_changed = Date().toString();
-
       const { backdrop_color } = await preamble.settings.getAll();
-      const newBackdrop = {
-        setting: backdrop_color.setting,
-        value: backdrop_color.setting.toLowerCase() === 'auto'
-          ? photo.img_color
-          : backdrop_color.value,
-      };
+      const newBackdrop = { value: photo.img_color };
 
       const storage: Partial<Storage> = {
         current_bg: photo,
-        last_changed,
+        bg_history: [...bgHistory, photo],
       };
 
       await browser.storage.local.set(storage);
@@ -71,9 +79,14 @@ const preamble = {
 
       return photo;
     },
-    addToHistory() {
-
-    }
+    async getCurrent(): Promise<BackgroundPhoto> {
+      const { current_bg } = await browser.storage.local.get('current_bg') as Storage;
+      return current_bg;
+    },
+    async getHistory() {
+      const { bg_history } = await browser.storage.local.get('bg_history') as Storage;
+      return bg_history;
+    },
   },
   weather: {
     async init(initParams) {
@@ -207,7 +220,7 @@ const preamble = {
       }
       if (isEmpty(history)) {
         const quotes_history = [];
-        await preamble.settings.set({ quotes_history });
+        await browser.storage.local.set({ quotes_history });
       }
       if (isEmpty(currentQuote)) {
         await this.new();
@@ -251,11 +264,11 @@ const preamble = {
     },
     async new() {
       const newQuote = await this.fetch();
-      const quotessHistory = await this.getHistory();
+      const quotesHistory = await this.getHistory();
 
       const storage: Partial<Storage> = {
         current_quote: newQuote,
-        quotess_history: [...quotessHistory, newQuote],
+        quotes_history: [...quotesHistory, newQuote],
       };
 
       await browser.storage.local.set(storage);

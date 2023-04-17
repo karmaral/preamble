@@ -26,13 +26,6 @@ const SETTINGS_DEFAULTS = {
   },
 };
 
-export const SETTINGS_INIT_DATA = {
-  backdrop_color: { setting: 'auto', value: '' },
-  font_family: { setting: 'Avenir', value: 'Avenir' },
-  user_name: { value: '' },
-  weather_location: { value: '' },
-};
-
 export const BACKGROUND_FALLBACK: BackgroundPhoto = {
   id: '',
   src: '',
@@ -41,6 +34,14 @@ export const BACKGROUND_FALLBACK: BackgroundPhoto = {
   alt_description: '',
   location: 'Baltic Sea',
   img_color: '#2a2630',
+  date: Date().toString(),
+};
+
+export const SETTINGS_INIT_DATA = {
+  backdrop_color: { value: BACKGROUND_FALLBACK.img_color },
+  font_family: { setting: 'Avenir', value: 'Avenir' },
+  user_name: { value: '' },
+  weather_location: { value: '' },
 };
 
 
