@@ -20,5 +20,8 @@
   "permissions": [
     "storage",
     "geolocation"
+  ],
+  "host_permissions": [
+    "https://preamble-server.vercel.app/api/*"
   ]
 }

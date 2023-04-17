@@ -3,6 +3,7 @@ import {
   QUOTE_RESET_TIME,
   SETTINGS_DEFAULTS,
   SETTINGS_INIT_DATA,
+  BACKGROUND_FALLBACK,
 } from './utils';
 import {
   isEmpty,
@@ -14,6 +15,7 @@ import {
   addHours,
   isAfter,
 } from 'date-fns';
+import type { Random } from 'unsplash-js/dist/methods/photos/types';
 import type {
   Storage,
   StoredSettings,
@@ -24,6 +26,55 @@ import type {
 } from "$types";
 
 const preamble = {
+  background: {
+    async fetchRandomImage(): Promise<Random> {
+      const url = 'https://preamble-server.vercel.app/api/background';
+      const res = await fetch(url);
+      const result = await res.json();
+      return result;
+    },
+    async new(): Promise<BackgroundPhoto> {
+      const imgFetch = await preamble.background.fetchRandomImage();
+      let photo: BackgroundPhoto;
+
+       if (imgFetch) {
+        photo = {
+          id: imgFetch.id,
+          src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
+          url: imgFetch.links.html,
+          user_name: imgFetch.user.name,
+          alt_description: imgFetch.alt_description,
+          location: imgFetch.location.name || 'Unknown',
+          img_color: imgFetch.color,
+        };
+      } else {
+        photo = BACKGROUND_FALLBACK;
+      }
+
+      const last_changed = Date().toString();
+
+      const { backdrop_color } = await preamble.settings.getAll();
+      const newBackdrop = {
+        setting: backdrop_color.setting,
+        value: backdrop_color.setting.toLowerCase() === 'auto'
+          ? photo.img_color
+          : backdrop_color.value,
+      };
+
+      const storage: Partial<Storage> = {
+        current_bg: photo,
+        last_changed,
+      };
+
+      await browser.storage.local.set(storage);
+      await preamble.settings.set({ backdrop_color: newBackdrop });
+
+      return photo;
+    },
+    addToHistory() {
+
+    }
+  },
   weather: {
     async init(initParams) {
       const { geolocation: initialGeo } = initParams;

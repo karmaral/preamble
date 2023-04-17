@@ -1,8 +1,6 @@
 import browser from 'webextension-polyfill';
 import preamble from './preamble';
 import { isArray, isEmpty } from 'lodash-es';
-import { createApi } from 'unsplash-js';
-import type { Random } from 'unsplash-js/dist/methods/photos/types';
 import type {
   BackgroundPhoto,
   StoredSettings,
@@ -11,65 +9,7 @@ import type {
   Storage,
   InitData,
 } from 'src/types';
-import { BACKGROUND_FALLBACK } from './utils';
 
-const collections = [
-  '2156994', /* Nature Backgrounds (Momentum) - Nicholas Prozorovsky */
-  '327760', /* Nature - Alex Chaves */
-];
-console.log('background');
-
-const unsplash = createApi({ accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY });
-
-
-async function fetchRandomImage(): Promise<Random> {
-  console.log('bg >> calling unsplash API');
-  const fetch = await unsplash.photos.getRandom({
-    collectionIds: collections,
-  });
-  const result = isArray(fetch.response) ? fetch.response[0] : fetch.response;
-
-  return result;
-}
-
-async function newBackground(): Promise<BackgroundPhoto> {
-  const imgFetch = await fetchRandomImage();
-  let photo: BackgroundPhoto;
-
-   if (imgFetch) {
-    photo = {
-      id: imgFetch.id,
-      src: `${imgFetch.urls.raw}?q=80&fm=jpg&w=1920`,
-      url: imgFetch.links.html,
-      user_name: imgFetch.user.name,
-      alt_description: imgFetch.alt_description,
-      location: imgFetch.location.name || 'Unknown',
-      img_color: imgFetch.color,
-    };
-  } else {
-    photo = BACKGROUND_FALLBACK;
-  }
-
-  const last_changed = Date().toString();
-
-  const { backdrop_color } = await preamble.settings.getAll();
-  const newBackdrop = {
-    setting: backdrop_color.setting,
-    value: backdrop_color.setting.toLowerCase() === 'auto'
-      ? photo.img_color
-      : backdrop_color.value,
-  };
-
-  const storage: Partial<Storage> = {
-    current_bg: photo,
-    last_changed,
-  };
-
-  await browser.storage.local.set(storage);
-  await preamble.settings.set({ backdrop_color: newBackdrop });
-
-  return photo;
-}
 
 function handleSettingUpdate(payload: SettingChangePayload) {
   const { key, label, value } = payload;
@@ -102,7 +42,7 @@ async function init(initParams): Promise<InitData> {
     await preamble.settings.init();
   }
   photo = isEmpty(current_bg)
-    ? await newBackground()
+    ? await preamble.background.new()
     : current_bg;
 
   if (isEmpty(settings?.backdrop_color) ) {
@@ -132,7 +72,7 @@ async function onMessage(
       response = await init(message.payload)
       break;
     case 'request:new_bg':
-      let bg = await newBackground();
+      let bg = await preamble.background.new();
       preamble.renderer.updateBackground(bg);
       break;
     case 'update:setting':
