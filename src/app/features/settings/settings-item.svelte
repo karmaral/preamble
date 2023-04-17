@@ -18,7 +18,7 @@
   $: currentValue = currentStoredSetting?.value;
   $: customActive = currentValue === 'custom';
 
-  let customValue: string | number | boolean;
+  let customValue: string | number | boolean = '';
 
   function handleCustomChange(opt: SettingsOption) {
     customValue = opt.value;
