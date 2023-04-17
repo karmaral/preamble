@@ -10,15 +10,6 @@ import type {
 } from 'src/types';
 
 
-function handleSettingUpdate(payload: SettingChangePayload) {
-  const { key, label, value } = payload;
-  const updateData: Record<string, unknown> = { setting: label, value };
-  if (payload.custom_value) {
-    updateData.custom_value = payload.custom_value;
-  }
-  preamble.settings.set({ [key]: updateData });
-}
-
 async function init(initParams): Promise<InitData> {
   console.log('init', initParams);
   const { geolocation } = initParams;
@@ -50,7 +41,7 @@ async function onMessage(
       preamble.renderer.updateBackground(bg);
       break;
     case 'update:setting':
-      handleSettingUpdate(message.payload as SettingChangePayload);
+      await preamble.settings.handleUpdate(message.payload as SettingChangePayload);
       break;
     default: break;
   }

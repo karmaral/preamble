@@ -19,6 +19,7 @@ import type { Random as RandomImage } from 'unsplash-js/dist/methods/photos/type
 import type {
   Storage,
   StoredSettings,
+  SettingChangePayload,
   BackgroundPhoto,
   Quote,
   Weather,
@@ -303,6 +304,14 @@ const preamble = {
         settings[k] = updateData[k];
       });
       await browser.storage.local.set({ settings });
+    },
+    async handleUpdate(payload: SettingChangePayload) {
+      const { key, label, value } = payload;
+      const updateData: Record<string, unknown> = { setting: label, value };
+      if (payload.custom_value) {
+        updateData.custom_value = payload.custom_value;
+      }
+      await preamble.settings.set({ [key]: updateData });
     },
     async getAll(): Promise<StoredSettings> {
       const { settings } = await browser.storage.local.get('settings');
