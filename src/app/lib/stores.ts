@@ -16,7 +16,7 @@ export let photos = writable<BackgroundPhoto[]>([] as BackgroundPhoto[]);
 export let isBackgroundChanging = writable<boolean>(false);
 
 export let dailyQuote = writable<Quote>(null as Quote);
-export let currentWeather = writable<Weather>(null as Weather);
+export let currentWeather = writable<Weather>({} as Weather);
 
 async function initStores() {
   const res = await requestInit();
