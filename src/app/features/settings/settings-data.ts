@@ -1,3 +1,5 @@
+import { updateWeatherLocation } from '$lib/middleware';
+
 export default {
   image_fetching : {
     label: 'Data Sources',
@@ -11,6 +13,14 @@ export default {
           { label: 'They Said So', value: 'https://quotes.rest/qod' },
           { label: 'GitHub', value: 'https://api.github.com/zen' },
         ],
+      },
+      {
+        item_key: 'weather_location',
+        title: 'Weather Geolocation',
+        description: 'Specify the place to get the weather from',
+        input_type: 'text',
+        direction: 'vertical',
+        custom_action: updateWeatherLocation,
       },
     ],
   },

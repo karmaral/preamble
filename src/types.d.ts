@@ -36,10 +36,19 @@ export interface Quote {
 
 export interface Weather {
   temperature: number;
-  time: string;
-  unit: string;
+  time: number;
   weathercode: number;
   text: string;
+  text_long: string;
+  city: string;
+}
+export interface LocationData {
+  name: string;
+  local_names: Record<string, string>;
+  lat: number;
+  lon: number;
+  country: string;
+  state: string;
 }
 export interface Coordinates {
   latitude: number;
@@ -51,7 +60,7 @@ export interface Storage {
   current_quote: Quote;
   quotes_history: Quote[];
   current_weather: Weather;
-  geolocation: Coordinates;
+  weather_location_data: LocationData;
   current_bg: BackgroundPhoto;
   bg_history: BackgroundPhoto[];
 }
@@ -69,6 +78,7 @@ export interface StoredSettings {
   weather_source: StoredSettingVariable;
   weather_unit: StoredSettingVariable;
   font_family: StoredSettingVariable;
+  weather_location: StoredSettingVariable;
 }
 
 export interface SettingsOption {
@@ -84,6 +94,7 @@ export interface SettingsItem {
   input_label?: string;
   options?: SettingsOption[];
   direction?: string;
+  custom_action?: (...args: unknown) => void;
 }
 export interface SettingsDataEntry {
   label: string;
@@ -96,7 +107,7 @@ export interface SettingsData {
 export interface SettingChangePayload {
   key: string;
   value: string | number | boolean;
-  label: string;
+  label?: string;
   custom_value?: string | number | boolean;
 }
 

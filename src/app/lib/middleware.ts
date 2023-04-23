@@ -1,6 +1,5 @@
 import browser from 'webextension-polyfill';
 import type { InitData, SettingChangePayload } from '$types';
-import { isError } from 'lodash-es';
 
 export function requestNewBackground() {
   browser.runtime.sendMessage({
@@ -9,25 +8,21 @@ export function requestNewBackground() {
 }
 
 export async function requestInit(): Promise<InitData> {
-  console.log('middleware: requestInit');
-  const position = await new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-  const geo = isError(position) ? position : {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-  };
-
   const request = await browser.runtime.sendMessage({
     action: 'request:init',
-    payload: { geolocation: geo },
   });
-
   return request.response;
 }
+
 export function updateSetting(payload: SettingChangePayload) {
   browser.runtime.sendMessage({
     action: 'update:setting',
+    payload,
+  });
+}
+export function updateWeatherLocation(payload: SettingChangePayload) {
+  browser.runtime.sendMessage({
+    action: 'update:weather_location',
     payload,
   });
 }
