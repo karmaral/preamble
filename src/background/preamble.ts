@@ -1,13 +1,11 @@
 import browser from 'webextension-polyfill';
 import {
   QUOTE_RESET_TIME,
-  SETTINGS_DEFAULTS,
   SETTINGS_INIT_DATA,
   BACKGROUND_FALLBACK,
 } from './utils';
 import {
   isEmpty,
-  isError,
 } from 'lodash-es';
 import {
   startOfDay,
@@ -24,7 +22,6 @@ import type {
   BackgroundPhoto,
   Quote,
   Weather,
-  Coordinates,
   LocationData,
 } from "$types";
 
@@ -148,7 +145,9 @@ const preamble = {
     async new() {
       const locationData = await preamble.settings.getLocationData();
       if (isEmpty(locationData)) return;
+
       const newWeather = await this.fetch();
+
       this.setCurrent(newWeather);
       await preamble.renderer.updateWeather(newWeather);
     },
@@ -295,10 +294,6 @@ const preamble = {
     async getWeatherUnit(): Promise<string> {
       const { weather_unit } = await preamble.settings.getAll();
       return weather_unit?.value;
-    },
-    async getGeolocation(): Promise<Coordinates> {
-      const { geolocation } = await browser.storage.local.get('geolocation') as Storage;
-      return geolocation;
     },
     async getLocationData(): Promise<LocationData> {
       const { weather_location_data } = await browser.storage.local.get('weather_location_data') as Storage;

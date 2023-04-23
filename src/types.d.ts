@@ -49,10 +49,6 @@ export interface LocationData {
   country: string;
   state: string;
 }
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
 
 export interface Storage {
   settings: Partial<StoredSettings>;

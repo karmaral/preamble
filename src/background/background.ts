@@ -1,20 +1,16 @@
 import browser from 'webextension-polyfill';
 import preamble from './preamble';
-import { isArray, isEmpty } from 'lodash-es';
 import type {
   SettingChangePayload,
   Message,
-  Storage,
   InitData,
 } from 'src/types';
 
 
 async function init(): Promise<InitData> {
-
   await preamble.settings.init();
   await preamble.background.init();
   const photo = await preamble.background.getCurrent();
-
   await preamble.quotes.init();
   await preamble.weather.init();
   const settings = await preamble.settings.getAll();
@@ -48,7 +44,6 @@ async function onMessage(
   return { response };
 }
 
-
 browser.runtime.onMessage.addListener(onMessage);
 browser.storage.onChanged.addListener((changes, areaName) => {
   if (areaName !== 'local') return;
@@ -57,6 +52,5 @@ browser.storage.onChanged.addListener((changes, areaName) => {
       action: 'sync:settings',
       payload: changes.settings.newValue,
     });
-
   }
 });
