@@ -7,9 +7,9 @@ https://user-images.githubusercontent.com/39108635/222536244-5e0a0d74-666d-42ec-
 ## The goal
 This was meant as an attempt to clone the Momentum extension, and see how far I could get by just using free API's.
 
-
-The only caveat is that it will require you to have [a developer key for using the Unsplash API](https://unsplash.com/developers).
-The weather is handled by requesting for `geolocation` and using [OpenMeteo](https://open-meteo.org), and the quotes are obtained from [They Said So](https://theysaidso.com).
+Images: [Unsplash](https://unsplash.com)  
+Weather: [OpenWeather](https://openweathermap.org)  
+Quotes: [They Said So](https://theysaidso.com)  
 
 ## Disclaimer
 Since this project was both for practice and for filling a very specific *UI quirk* need, the main purpose of the app is achieved. 
