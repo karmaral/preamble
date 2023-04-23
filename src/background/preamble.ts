@@ -69,7 +69,6 @@ const preamble = {
         photo = BACKGROUND_FALLBACK;
       }
 
-      const { backdrop_color } = await preamble.settings.getAll();
       const newBackdrop = { value: photo.img_color };
 
       const storage: Partial<Storage> = {
@@ -112,19 +111,19 @@ const preamble = {
       const locationData = await preamble.settings.getLocationData();
       const u = await preamble.settings.getWeatherUnit();
       const { lat, lon } = locationData;
-      const url = `${source}?latitude=${lat}&longitude=${lon}&unit=${u}`;
+      const url = `${source}?lat=${lat}&lon=${lon}&unit=${u}`;
 
 
-      let data = await fetch(url);
-      data = await data.json();
-
+      const res = await fetch(url);
+      const data = await res.json() as Partial<Weather>;
+      const { temperature, weathercode, text, text_long, time } = data;
 
       const weather: Weather = {
-        temperature: data.main.temp,
-        weathercode: data.weather[0].id,
-        text: data.weather[0].main,
-        text_long: data.weather[0].description,
-        time: data.dt * 1000,
+        temperature,
+        weathercode,
+        text,
+        text_long,
+        time,
         city: locationData.name,
       };
 
