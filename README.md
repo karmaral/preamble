@@ -9,7 +9,7 @@ This was meant as an attempt to clone the Momentum extension, and see how far I 
 
 Images: [Unsplash](https://unsplash.com)  
 Weather: [OpenWeather](https://openweathermap.org)  
-Quotes: [They Said So](https://theysaidso.com)  
+Quotes: [ZenQuotes](https://zenquotes.io)  
 
 ## Disclaimer
 Since this project was both for practice and for filling a very specific *UI quirk* need, the main purpose of the app is achieved. 

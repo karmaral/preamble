@@ -1,13 +1,11 @@
 import browser from 'webextension-polyfill';
 import {
   QUOTE_RESET_TIME,
-  SETTINGS_DEFAULTS,
   SETTINGS_INIT_DATA,
   BACKGROUND_FALLBACK,
 } from './utils';
 import {
   isEmpty,
-  isError,
 } from 'lodash-es';
 import {
   startOfDay,
@@ -24,7 +22,6 @@ import type {
   BackgroundPhoto,
   Quote,
   Weather,
-  Coordinates,
   LocationData,
 } from "$types";
 
@@ -69,7 +66,6 @@ const preamble = {
         photo = BACKGROUND_FALLBACK;
       }
 
-      const { backdrop_color } = await preamble.settings.getAll();
       const newBackdrop = { value: photo.img_color };
 
       const storage: Partial<Storage> = {
@@ -112,19 +108,19 @@ const preamble = {
       const locationData = await preamble.settings.getLocationData();
       const u = await preamble.settings.getWeatherUnit();
       const { lat, lon } = locationData;
-      const url = `${source}?latitude=${lat}&longitude=${lon}&unit=${u}`;
+      const url = `${source}?lat=${lat}&lon=${lon}&unit=${u}`;
 
 
-      let data = await fetch(url);
-      data = await data.json();
-
+      const res = await fetch(url);
+      const data = await res.json() as Partial<Weather>;
+      const { temperature, weathercode, text, text_long, time } = data;
 
       const weather: Weather = {
-        temperature: data.main.temp,
-        weathercode: data.weather[0].id,
-        text: data.weather[0].main,
-        text_long: data.weather[0].description,
-        time: data.dt * 1000,
+        temperature,
+        weathercode,
+        text,
+        text_long,
+        time,
         city: locationData.name,
       };
 
@@ -149,7 +145,9 @@ const preamble = {
     async new() {
       const locationData = await preamble.settings.getLocationData();
       if (isEmpty(locationData)) return;
+
       const newWeather = await this.fetch();
+
       this.setCurrent(newWeather);
       await preamble.renderer.updateWeather(newWeather);
     },
@@ -191,12 +189,7 @@ const preamble = {
     async init() {
       const currentQuote = await this.getCurrent();
       const history = await this.getHistory();
-      const source = await preamble.settings.getQuoteSource();
 
-      if (isEmpty(source)) {
-        const { quotes_source } = SETTINGS_DEFAULTS;
-        await preamble.settings.set({ quotes_source });
-      }
       if (isEmpty(history)) {
         const quotes_history = [];
         await browser.storage.local.set({ quotes_history });
@@ -221,20 +214,15 @@ const preamble = {
       return quotes_history;
     },
     async fetch(): Promise<Quote> {
-      const url = await preamble.settings.getQuoteSource();
-      let data = await fetch(url);
-      // data = target === 'GitHub'
-      //   ? await data.text()
-      //   : await data.json();
-      data = await data.json();
+      const url = 'https://preamble-server.vercel.app/api/quote';
 
-      let quote: Quote;
+      const res = await fetch(url);
+      const data = await res.json();
+      const { author, text, source } = data;
 
-      quote = {
-        id: data.contents.quotes[0].id,
-        author: data.contents.quotes[0].author,
-        text: data.contents.quotes[0].quote,
-        source: data.contents.quotes[0].permalink,
+
+      const quote: Quote = {
+        author, text, source,
         date: new Date().toString(),
       };
       console.log({ quote });
@@ -306,10 +294,6 @@ const preamble = {
     async getWeatherUnit(): Promise<string> {
       const { weather_unit } = await preamble.settings.getAll();
       return weather_unit?.value;
-    },
-    async getGeolocation(): Promise<Coordinates> {
-      const { geolocation } = await browser.storage.local.get('geolocation') as Storage;
-      return geolocation;
     },
     async getLocationData(): Promise<LocationData> {
       const { weather_location_data } = await browser.storage.local.get('weather_location_data') as Storage;

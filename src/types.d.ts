@@ -27,7 +27,6 @@ export interface BackgroundPhoto {
 }
 
 export interface Quote {
-  id: string;
   text: string;
   author: string;
   source: string;
@@ -49,10 +48,6 @@ export interface LocationData {
   lon: number;
   country: string;
   state: string;
-}
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
 }
 
 export interface Storage {
