@@ -84,7 +84,7 @@
     user-select: text;
   }
   .greeting-text > span:focus-visible {
-    outline: none;
+    outline: transparent;
   }
   .greeting-text > span::before {
     content: "";
@@ -108,7 +108,7 @@
     opacity: 1;
     transition-delay: 0s;
   }
-  .greeting-text > span.active::after {
+  .greeting-text::after {
     content: ".";
     position: absolute;
   }

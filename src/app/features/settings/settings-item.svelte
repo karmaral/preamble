@@ -35,7 +35,8 @@
     const { value, label } = opt;
     const payload: SettingChangePayload = { key: item_key, value, label };
 
-    updateSetting(payload);
+    const updateCallback = data?.custom_action ?? updateSetting;
+    updateCallback(payload);
   }
 
   onMount(() => {

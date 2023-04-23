@@ -13,6 +13,7 @@ import {
   startOfDay,
   addDays,
   addHours,
+  addMinutes,
   isAfter,
 } from 'date-fns';
 import type { Random as RandomImage } from 'unsplash-js/dist/methods/photos/types';
@@ -24,6 +25,7 @@ import type {
   Quote,
   Weather,
   Coordinates,
+  LocationData,
 } from "$types";
 
 const preamble = {
@@ -90,31 +92,14 @@ const preamble = {
     },
   },
   weather: {
-    async init(initParams) {
-      const { geolocation: initialGeo } = initParams;
-      console.log('init weather', { i: initParams, g: initialGeo });
+    async init() {
       const currentWeather = await this.getCurrent();
-      const source = await preamble.settings.getWeatherSource();
-      const geolocation =  await preamble.settings.getGeolocation();
+      const locationData = await preamble.settings.getLocationData();
 
-      if (isEmpty(source)) {
-        const { weather_source } = SETTINGS_DEFAULTS;
-        await preamble.settings.set({ weather_source });
+      if (isEmpty(locationData)) {
+        await browser.storage.local.set({ weather_location_data: {} });
       }
-      if (isEmpty(geolocation)) {
-        console.log('empty geolocation setting');
-        if (!isEmpty(initialGeo)) {
-          if (isError(initialGeo)) {
-            // set disabled
-            return;
-          }
-          console.log('setting geoloc', initialGeo);
-          await browser.storage.local.set({
-            geolocation: initialGeo,
-          });
-        }
 
-      }
       if (isEmpty(currentWeather)) {
         await this.new();
         return;
@@ -123,31 +108,36 @@ const preamble = {
       this.sync(currentWeather);
     },
     async fetch() {
-      console.log('fetch weather');
-      const source = await preamble.settings.getWeatherSource();
-      const unit = await preamble.settings.getWeatherUnit();
-      const { latitude, longitude } = await preamble.settings.getGeolocation();
-      const lat = `?latitude=${latitude}`;
-      const long = `&longitude=${longitude}`;
-      const u = unit === 'fahrenheit' ? `&temperature_unit=${unit}` : '';
-      const url = `${source}${lat}${long}&current_weather=true&timezone=auto${u}`;
-      console.log(url);
+      const source = 'https://preamble-server.vercel.app/api/weather';
+      const locationData = await preamble.settings.getLocationData();
+      const u = await preamble.settings.getWeatherUnit();
+      const { lat, lon } = locationData;
+      const url = `${source}?latitude=${lat}&longitude=${lon}&unit=${u}`;
+
 
       let data = await fetch(url);
       data = await data.json();
-      console.log({ weatherFetch: data });
 
-      const { temperature, time, weathercode } = data.current_weather;
 
       const weather: Weather = {
-        temperature,
-        weathercode,
-        text: this.getWeatherCodeString(weathercode),
-        time,
-        unit: this.getUnitSymbol(unit),
+        temperature: data.main.temp,
+        weathercode: data.weather[0].id,
+        text: data.weather[0].main,
+        text_long: data.weather[0].description,
+        time: data.dt * 1000,
+        city: locationData.name,
       };
 
       return weather;
+    },
+    async fetchLocationData(query: string) {
+      const source = 'https://preamble-server.vercel.app/api/geolocation';
+      const url = `${source}?q=${query}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      return data;
     },
     async getCurrent(): Promise<Weather> {
       const { current_weather } = await browser.storage.local.get('current_weather') as Storage;
@@ -157,15 +147,18 @@ const preamble = {
       await browser.storage.local.set({ current_weather: weather });
     },
     async new() {
+      const locationData = await preamble.settings.getLocationData();
+      if (isEmpty(locationData)) return;
       const newWeather = await this.fetch();
       this.setCurrent(newWeather);
       await preamble.renderer.updateWeather(newWeather);
     },
     async sync(weather: Weather) {
       const currentWeather = weather ?? await this.getCurrent();
+      const CHANGE_INTERVAL = 30;
 
       const lastChange = new Date(currentWeather.time);
-      const nextChange = addHours(lastChange, 1);
+      const nextChange = addMinutes(lastChange, CHANGE_INTERVAL);
       const now = new Date();
 
       if (isAfter(now, nextChange)) {
@@ -174,38 +167,23 @@ const preamble = {
       }
       preamble.renderer.updateWeather(currentWeather);
     },
-    getWeatherCodeString(weathercode: number): string | null {
-      const mappings = {
-        0: 'Clear sky',
-        1: 'Mainly clear',
-        2: 'Partly cloudy',
-        3: 'Overcast',
-        45: 'Fog',
-        48: 'Depositing rime fog',
-        51: 'Light drizzle',
-        53: 'Moderate drizzle',
-        55: 'Dense drizzle',
-        56: 'Light, freezing drizzle',
-        57: 'Dense, freezing drizzle',
-        61: 'Slight rain',
-        63: 'Moderate rain',
-        65: 'Heavy rain',
-        66: 'Light freezing rain',
-        67: 'Heavy freezing rain',
-        71: 'Slight snowfall',
-        73: 'Moderate snowfall',
-        75: 'Heavy snowfall',
-        77: 'Snow grains',
-        80: 'Slight rain showers',
-        81: 'Moderate rain showers',
-        82: 'Violent rain showers',
-      };
-      return mappings[weathercode] ?? null;
+    async getLocationString() {
+      const { weather_location } = await preamble.settings.getAll();
+      return weather_location;
     },
-    getUnitSymbol(unit: string) {
-      if (!unit) return '°C';
-      const letter = unit.charAt(0).toUpperCase();
-      return `°${letter}`;
+    async handleLocationUpdate(payload: SettingChangePayload) {
+      const locationString = payload.value as string;
+      preamble.settings.handleUpdate({
+        key: 'weather_location',
+        value: locationString,
+      });
+
+      const data = await preamble.weather.fetchLocationData(locationString);
+      await browser.storage.local.set({
+        weather_location_data: data,
+      });
+
+      await preamble.weather.new();
     },
 
   },
@@ -333,6 +311,10 @@ const preamble = {
       const { geolocation } = await browser.storage.local.get('geolocation') as Storage;
       return geolocation;
     },
+    async getLocationData(): Promise<LocationData> {
+      const { weather_location_data } = await browser.storage.local.get('weather_location_data') as Storage;
+      return weather_location_data;
+    }
   },
   renderer: {
     updateBackground(photo: BackgroundPhoto) {

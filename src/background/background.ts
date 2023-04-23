@@ -2,7 +2,6 @@ import browser from 'webextension-polyfill';
 import preamble from './preamble';
 import { isArray, isEmpty } from 'lodash-es';
 import type {
-  BackgroundPhoto,
   SettingChangePayload,
   Message,
   Storage,
@@ -10,17 +9,14 @@ import type {
 } from 'src/types';
 
 
-async function init(initParams): Promise<InitData> {
-  console.log('init', initParams);
-  const { geolocation } = initParams;
+async function init(): Promise<InitData> {
 
   await preamble.settings.init();
   await preamble.background.init();
   const photo = await preamble.background.getCurrent();
 
-
   await preamble.quotes.init();
-  await preamble.weather.init({ geolocation });
+  await preamble.weather.init();
   const settings = await preamble.settings.getAll();
 
   return { photo, settings };
@@ -34,7 +30,7 @@ async function onMessage(
   let response: unknown;
   switch (message.action) {
     case 'request:init':
-      response = await init(message.payload)
+      response = await init()
       break;
     case 'request:new_bg':
       let bg = await preamble.background.new();
@@ -42,6 +38,9 @@ async function onMessage(
       break;
     case 'update:setting':
       await preamble.settings.handleUpdate(message.payload as SettingChangePayload);
+      break;
+    case 'update:weather_location':
+      await preamble.weather.handleLocationUpdate(message.payload as SettingChangePayload);
       break;
     default: break;
   }

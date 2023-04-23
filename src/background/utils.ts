@@ -40,8 +40,9 @@ export const BACKGROUND_FALLBACK: BackgroundPhoto = {
 export const SETTINGS_INIT_DATA = {
   backdrop_color: { value: BACKGROUND_FALLBACK.img_color },
   font_family: { setting: 'Avenir', value: 'Avenir' },
-  user_name: { value: '' },
-  weather_location: { value: '' },
+  user_name: { value: null },
+  weather_location: { value: null },
+  weather_unit: { value: 'metric' },
 };
 
 
