@@ -27,7 +27,6 @@ export interface BackgroundPhoto {
 }
 
 export interface Quote {
-  id: string;
   text: string;
   author: string;
   source: string;

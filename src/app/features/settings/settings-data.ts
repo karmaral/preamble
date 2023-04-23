@@ -1,16 +1,16 @@
 import { updateWeatherLocation } from '$lib/middleware';
 
 export default {
-  image_fetching : {
+  data_sources : {
     label: 'Data Sources',
     settings: [
       {
         item_key: 'quotes_source',
         title: 'Quotes',
-        description: 'The daily quote will change at 04:00am',
+        description: 'The daily quote will change at 00:00 UTC',
         input_type: 'enum',
         options: [
-          { label: 'They Said So', value: 'https://quotes.rest/qod' },
+          { label: 'ZenQuotes', value: 'https://zenquotes.io' },
           { label: 'GitHub', value: 'https://api.github.com/zen' },
         ],
       },

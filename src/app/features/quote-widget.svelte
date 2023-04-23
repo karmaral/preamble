@@ -41,7 +41,6 @@
   }
   .wrap {
     all: unset;
-    cursor: pointer;
     padding: 2rem;
   }
   .content {

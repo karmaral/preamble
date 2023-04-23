@@ -191,12 +191,7 @@ const preamble = {
     async init() {
       const currentQuote = await this.getCurrent();
       const history = await this.getHistory();
-      const source = await preamble.settings.getQuoteSource();
 
-      if (isEmpty(source)) {
-        const { quotes_source } = SETTINGS_DEFAULTS;
-        await preamble.settings.set({ quotes_source });
-      }
       if (isEmpty(history)) {
         const quotes_history = [];
         await browser.storage.local.set({ quotes_history });
@@ -221,20 +216,15 @@ const preamble = {
       return quotes_history;
     },
     async fetch(): Promise<Quote> {
-      const url = await preamble.settings.getQuoteSource();
-      let data = await fetch(url);
-      // data = target === 'GitHub'
-      //   ? await data.text()
-      //   : await data.json();
-      data = await data.json();
+      const url = 'https://preamble-server.vercel.app/api/quote';
 
-      let quote: Quote;
+      const res = await fetch(url);
+      const data = await res.json();
+      const { author, text, source } = data;
 
-      quote = {
-        id: data.contents.quotes[0].id,
-        author: data.contents.quotes[0].author,
-        text: data.contents.quotes[0].quote,
-        source: data.contents.quotes[0].permalink,
+
+      const quote: Quote = {
+        author, text, source,
         date: new Date().toString(),
       };
       console.log({ quote });
