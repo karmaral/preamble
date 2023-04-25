@@ -1,26 +1,16 @@
 import { updateWeatherLocation } from '$lib/middleware';
 
 export default {
-  data_sources : {
-    label: 'Data Sources',
+  user : {
+    label: 'You',
     settings: [
       {
-        item_key: 'quotes_source',
-        title: 'Quotes',
-        description: 'The daily quote will change at 00:00 UTC',
-        input_type: 'enum',
-        options: [
-          { label: 'ZenQuotes', value: 'https://zenquotes.io' },
-          { label: 'GitHub', value: 'https://api.github.com/zen' },
-        ],
-      },
-      {
-        item_key: 'weather_location',
-        title: 'Weather Geolocation',
-        description: 'Specify the place to get the weather from',
+        item_key: 'user_name',
+        title: 'What\'s your name?',
+        description: '',
         input_type: 'text',
+        input_label: '',
         direction: 'vertical',
-        custom_action: updateWeatherLocation,
       },
     ],
   },
@@ -53,6 +43,7 @@ export default {
         description: 'How often should the background change?\nDefault mode will change every day at 0:00.',
         input_type: 'range',
         input_label: '',
+        disabled: true,
       },
       {
         item_key: 'clock_display_format',
@@ -64,19 +55,32 @@ export default {
           { label: '24h', value: '24' },
         ],
         input_label: '12h | 24h',
+        disabled: true,
       },
     ],
   },
-  user : {
-    label: 'You',
+  data_sources : {
+    label: 'Data Sources',
     settings: [
       {
-        item_key: 'user_name',
-        title: 'What\'s your name?',
-        description: '',
+        item_key: 'quotes_source',
+        title: 'Quotes',
+        description: 'The daily quote will change at 00:00 UTC',
+        input_type: 'enum',
+        options: [
+          { label: 'ZenQuotes', value: 'https://zenquotes.io' },
+          { label: 'GitHub', value: 'https://api.github.com/zen' },
+        ],
+        disabled: true,
+      },
+      {
+        item_key: 'weather_location',
+        title: 'Weather Geolocation',
+        description: 'Specify the place to get the weather from',
+        placeholder: 'City, Country',
         input_type: 'text',
-        input_label: '',
         direction: 'vertical',
+        custom_action: updateWeatherLocation,
       },
     ],
   },
