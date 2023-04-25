@@ -10,6 +10,7 @@
     item_key,
     title,
     description,
+    placeholder,
     input_label,
     input_type,
   } = data;
@@ -50,6 +51,7 @@
 <div
   class="settings-item"
   class:vertical={data?.direction === 'vertical' }
+  class:disabled={data?.disabled}
 >
   <div class="item-info">
     <h3>{title}</h3>
@@ -83,6 +85,7 @@
         key={item_key}
         label={input_label}
         value={currentValue}
+        {placeholder}
         onChange={handleChange}
       />
     {/if}
@@ -97,6 +100,17 @@
     gap: 1rem;
     padding-block: 1.2rem;
     border-bottom: 1px solid rgb(255 255 255 / 10%);
+    position: relative;
+  }
+  .settings-item.disabled {
+    padding-bottom: 2.5em;
+  }
+  .settings-item.disabled::after {
+    content: "This setting has no effect at the moment";
+    position: absolute;
+    bottom: 0.5em;
+    font-size: .8em;
+    opacity: 0.4;
   }
   .settings-item.vertical {
     flex-direction: column;

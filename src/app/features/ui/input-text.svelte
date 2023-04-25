@@ -4,6 +4,7 @@
   export let key = '';
   export let label = '';
   export let value = '';
+  export let placeholder = '';
 
   export let onChange: (opt: SettingsOption) => void;
 
@@ -23,12 +24,13 @@
 
 <div class="ui-input-text">
   <label for="{key}">
-    {label}
+    <span>{label}</span>
     <input
       type="text"
       name="{key}"
       id=""
       {value}
+      {placeholder}
       bind:this={elemRef}
       on:keydown={handleKeys}
       on:blur={handleSubmit}
@@ -47,19 +49,24 @@
   input {
     padding: .5rem;
     width: 80%;
-    border: 1px solid hsl(0 0% 100% / 8%);
+    border: 1px solid transparent;
     border-radius: .2rem;
     background: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-family: inherit;
+    font-weight: 300;
     box-shadow: none;
     color: hsl(0 0% 100% / 70%);
     transition: all .2s;
   }
   input:focus-visible {
-    outline: none;
+    outline: transparent;
     color: hsl(0 0% 100% / 90%);
-    border-color: hsl(0 0% 100% / 20%);
+    border-color: hsl(0 0% 100% / 15%);
     box-shadow: inset 0 0 2em -1em hsl(0deg 0% 0% / 50%);
+  }
+  input::placeholder {
+    color: inherit;
+    opacity: .4;
   }
 </style>

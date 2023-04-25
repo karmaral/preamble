@@ -85,11 +85,13 @@ export interface SettingsItem {
   item_key: string;
   title: string;
   description: string;
+  placeholder?: string;
   input_type: string;
   input_label?: string;
   options?: SettingsOption[];
   direction?: string;
   custom_action?: (...args: unknown) => void;
+  disabled?: boolean;
 }
 export interface SettingsDataEntry {
   label: string;
